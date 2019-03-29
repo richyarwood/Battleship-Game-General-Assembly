@@ -20,6 +20,7 @@ Horizontal: ((index + ship.size)) / width <= 1
 
   let width = 10
   let shipLength = 4
+  const numShips = 6
 
   function createGrid() {
     for (let i = 0; i < (width * width); i++) {
@@ -27,71 +28,56 @@ Horizontal: ((index + ship.size)) / width <= 1
       document.querySelector('.grid').appendChild(square)
       square.classList.add('square')
     }
+    for (let i = 0; i < numShips; i++){
+      computerPlaceShips()
+    }
   }
-
 
   function computerPlaceShips() {
 
     const squares = document.querySelectorAll('.square')
-
     let randomIndex = Math.floor(Math.random() * squares.length)
-    console.log(randomIndex, 'Index')
-
     let columnIndex = (randomIndex % width)
-    console.log(columnIndex, 'COL')
-
     let rowIndex = Math.floor(randomIndex/width)
-    console.log(rowIndex, 'ROW')
+    console.log(randomIndex, 'Index', columnIndex, 'COL', rowIndex, 'ROW')
 
-    //Checking if horizontal ship fits row
-    while ((width - columnIndex) < shipLength) {
-      randomIndex = Math.floor(Math.random() * squares.length)
-      columnIndex = (randomIndex % width)    //
-      console.log(columnIndex, 'NEW COL INDEX')
-      console.log(randomIndex, 'In while')
-    }
+    let randomDirection = Math.random() >= 0.5
+    console.log(randomDirection)
 
-    // Then need to check to see if randomIndex++ === squares.className('ship-square')
+    if (randomDirection === true) {
+      //Checking if horizontal ship fits row
+      while ((width - columnIndex) < shipLength) {
+        randomIndex = Math.floor(Math.random() * squares.length)
+        columnIndex = (randomIndex % width)
+        console.log(columnIndex, 'NEW COL INDEX', randomIndex, 'NEW RANDOM INDEX')
+      }
 
-     // Creating a horizontal ship
-    for (let i = 0; i < shipLength; i++) {
-      const nextHorizontalIndex = randomIndex + i
-      const shipSquare = squares[nextHorizontalIndex]
-      shipSquare.classList.add('ship-square')
-    }
+       // Creating a horizontal ship
+      for (let i = 0; i < shipLength; i++) {
+        const nextHorizontalIndex = randomIndex + i
+        const shipSquare = squares[nextHorizontalIndex]
+        shipSquare.classList.add('ship-square')
+      }
+    } else {
+      while ((rowIndex - 1 + shipLength) >= width) {
+        randomIndex = Math.floor(Math.random() * squares.length)
+        columnIndex = (randomIndex % width)
+        rowIndex = Math.floor(randomIndex/width)
+      }
 
-    // Creating a vertical ship
-
-
-    while ((rowIndex + shipLength) >= width) {
-      randomIndex = Math.floor(Math.random() * squares.length)
-      console.log(randomIndex, 'In while')
-
-      columnIndex = (randomIndex % width)
-      console.log(columnIndex, 'NEW COL INDEX')
-
-      rowIndex = Math.floor(randomIndex/width)
-      console.log(rowIndex, 'NEW ROW INDEX')
-
-
-    }
-
-    for (let i = 0; i < shipLength; i++) {
+      for (let i = 0; i < shipLength; i++) {
         const nextVerticalIndex = randomIndex + i * 10
         const shipSquare = squares[nextVerticalIndex]
         shipSquare.classList.add('ship-square')
       }
+    }
+
+
+    // Creating a vertical ship
   }
 
 
   createGrid()
-  computerPlaceShips()
-
-
-// for (let i = 1;i<shipLength;i++){
-//   if (randomIndex + i % width === 0) validPlacement = false
-// }
-
 
 
 
