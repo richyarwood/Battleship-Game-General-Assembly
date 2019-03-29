@@ -19,6 +19,7 @@ Horizontal: ((index + ship.size)) / width <= 1
 */
 
   let width = 10
+  let shipLength = 4
 
   function createGrid() {
     for (let i = 0; i < (width * width); i++) {
@@ -28,26 +29,68 @@ Horizontal: ((index + ship.size)) / width <= 1
     }
   }
 
+
   function computerPlaceShips() {
 
     const squares = document.querySelectorAll('.square')
-    console.log(squares)
 
-    const randomIndex = Math.floor(Math.random() * squares.length)
+    let randomIndex = Math.floor(Math.random() * squares.length)
+    console.log(randomIndex, 'Index')
 
-    for (let i = 0; i < 4; i++){
-      const nextIndex = randomIndex + i
-      const shipSquare = squares[nextIndex]
+    let columnIndex = (randomIndex % width)
+    console.log(columnIndex, 'COL')
+
+    let rowIndex = Math.floor(randomIndex/width)
+    console.log(rowIndex, 'ROW')
+
+    //Checking if horizontal ship fits row
+    while ((width - columnIndex) < shipLength) {
+      randomIndex = Math.floor(Math.random() * squares.length)
+      columnIndex = (randomIndex % width)    //
+      console.log(columnIndex, 'NEW COL INDEX')
+      console.log(randomIndex, 'In while')
+    }
+
+    // Then need to check to see if randomIndex++ === squares.className('ship-square')
+
+     // Creating a horizontal ship
+    for (let i = 0; i < shipLength; i++) {
+      const nextHorizontalIndex = randomIndex + i
+      const shipSquare = squares[nextHorizontalIndex]
       shipSquare.classList.add('ship-square')
     }
 
+    // Creating a vertical ship
+
+
+    while ((rowIndex + shipLength) >= width) {
+      randomIndex = Math.floor(Math.random() * squares.length)
+      console.log(randomIndex, 'In while')
+
+      columnIndex = (randomIndex % width)
+      console.log(columnIndex, 'NEW COL INDEX')
+
+      rowIndex = Math.floor(randomIndex/width)
+      console.log(rowIndex, 'NEW ROW INDEX')
+
+
+    }
+
+    for (let i = 0; i < shipLength; i++) {
+        const nextVerticalIndex = randomIndex + i * 10
+        const shipSquare = squares[nextVerticalIndex]
+        shipSquare.classList.add('ship-square')
+      }
   }
+
 
   createGrid()
   computerPlaceShips()
 
 
-
+// for (let i = 1;i<shipLength;i++){
+//   if (randomIndex + i % width === 0) validPlacement = false
+// }
 
 
 
