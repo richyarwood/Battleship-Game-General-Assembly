@@ -24,3 +24,7 @@ div.square {
   height: 10%;
   border: 1px solid;
 }
+
+.ship-square {
+  background-color: #000000;
+}
