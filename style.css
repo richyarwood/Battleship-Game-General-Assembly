@@ -18,6 +18,9 @@
   width: 600px;
 }
 
+.block {
+  background-color: red;
+}
 
 div.square {
   width: 10%;
@@ -25,6 +28,6 @@ div.square {
   border: 1px solid;
 }
 
-.ship-square {
+.ship {
   background-color: #000000;
 }
