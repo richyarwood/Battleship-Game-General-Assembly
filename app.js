@@ -19,22 +19,43 @@ document.addEventListener('DOMContentLoaded', () =>{
   }
 
   function computerPlaceShips() {
+    // Choose horizontal or vertical ship
+    let randomDirection = Math.random() >= 0.5
+
     randomIndex = Math.floor(Math.random() * squares.length)
+
     let columnIndex = (randomIndex % width)
+    let rowIndex = Math.floor(randomIndex/width)
     console.log(randomIndex)
 
-    while ((width - columnIndex) < shipLength) {
-      console.log('Different random index')
-      randomIndex = Math.floor(Math.random() * squares.length)
-      columnIndex = (randomIndex % width)
+    //Make horizontal ship
+
+    if (randomDirection === true){
+      while ((width - columnIndex) < shipLength) {
+        console.log('Different random index')
+        randomIndex = Math.floor(Math.random() * squares.length)
+        columnIndex = (randomIndex % width)
+      }
+
+      for (let i = 0; i < shipLength; i++){
+        const nextIndex = randomIndex + i
+        const shipSquares = squares[nextIndex]
+        shipSquares.classList.add('ship')
+
+      }
+    } else {
+      while ((rowIndex - 1 + shipLength) >= width) {
+        randomIndex = Math.floor(Math.random() * squares.length)
+        columnIndex = (randomIndex % width)
+        rowIndex = Math.floor(randomIndex/width)
+      }
+      for (let i = 0; i < shipLength; i++) {
+        const nextVerticalIndex = randomIndex + i * 10
+        const shipSquare = squares[nextVerticalIndex]
+        shipSquare.classList.add('ship')
+      }
     }
 
-    for (let i = 0; i < shipLength; i++){
-      const nextIndex = randomIndex + i
-      const shipSquares = squares[nextIndex]
-      shipSquares.classList.add('ship')
-
-    }
     blockAroundPlacedShip()
   }
 
@@ -80,10 +101,6 @@ document.addEventListener('DOMContentLoaded', () =>{
       //If ship is in top left corner
     } else if (randomIndex === 0) {
       console.log('top left corner')
-      endOfBlockade++
-      startOfBlockade = endOfBlockade
-      console.log(startOfBlockade, 'start top corner')
-      leftBlockade = rightBlockade
       lengthOfBlockade--
 
       //If ship is in top right corner
@@ -115,16 +132,24 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     // Laying down the blockade
-    squares[leftBlockade].classList.add('block') //left
-    squares[rightBlockade].classList.add('block') //right
+    if (randomIndex === 0) {
+      for (let i = 0; i < lengthOfBlockade; i++){
+        squares[rightBlockade].classList.add('block') //right
+        squares[endOfBlockade + i].classList.add('block') // bottom
+      }
+    } else {
+      squares[rightBlockade].classList.add('block') //right
+      squares[leftBlockade].classList.add('block') //left
 
-    for (let i = 0; i < lengthOfBlockade; i++){
-      squares[startOfBlockade + i].classList.add('block') // top
-      console.log(startOfBlockade + i , 'top')
+      for (let i = 0; i < lengthOfBlockade; i++){
+        squares[startOfBlockade + i].classList.add('block') // top
+        console.log(startOfBlockade + i , 'top')
 
-      squares[endOfBlockade + i].classList.add('block') // bottom
-      console.log(endOfBlockade, 'bottom')
+        squares[endOfBlockade + i].classList.add('block') // bottom
+        console.log(endOfBlockade, 'bottom')
+      }
     }
+
 
   }
 
