@@ -29,10 +29,18 @@ Horizontal: ((index + ship.size)) / width <= 1
   }
 
   function computerPlaceShips() {
+
     const squares = document.querySelectorAll('.square')
     console.log(squares)
-    const computerChoice = squares[Math.floor(Math.random() * squares.length)]
-    computerChoice.classList.add('ship-square')
+
+    const randomIndex = Math.floor(Math.random() * squares.length)
+
+    for (let i = 0; i < 4; i++){
+      const nextIndex = randomIndex + i
+      const shipSquare = squares[nextIndex]
+      shipSquare.classList.add('ship-square')
+    }
+
   }
 
   createGrid()
