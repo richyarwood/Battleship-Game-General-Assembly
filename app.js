@@ -20,8 +20,15 @@ document.addEventListener('DOMContentLoaded', () =>{
 
   function computerPlaceShips() {
     randomIndex = Math.floor(Math.random() * squares.length)
-    randomIndex = 97
+    let columnIndex = (randomIndex % width)
     console.log(randomIndex)
+
+    while ((width - columnIndex) < shipLength) {
+      console.log('Different random index')
+      randomIndex = Math.floor(Math.random() * squares.length)
+      columnIndex = (randomIndex % width)
+    }
+
     for (let i = 0; i < shipLength; i++){
       const nextIndex = randomIndex + i
       const shipSquares = squares[nextIndex]
@@ -35,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     let lengthOfBlockade = shipLength + 2
 
-    let rowIndex = Math.floor(randomIndex / width)
-    let columnIndex = (randomIndex % width)
+    const rowIndex = Math.floor(randomIndex / width)
+    const columnIndex = (randomIndex % width)
 
     let startOfBlockade = (randomIndex - width - 1)
     console.log(startOfBlockade ,'Initial start')
@@ -51,10 +58,10 @@ document.addEventListener('DOMContentLoaded', () =>{
     console.log(rightBlockade, 'right')
 
     // If ship is against left side
-    if (startOfBlockade % width === width - 1 && columnIndex === 0 & rowIndex !== width - 1){
+    if (randomIndex % width === 0 && columnIndex === 0 & rowIndex !== width - 1){
       console.log('left side')
-      startOfBlockade = (randomIndex - width)
-      endOfBlockade = (randomIndex + width)
+      startOfBlockade++
+      endOfBlockade++
       leftBlockade = rightBlockade
       console.log(leftBlockade, 'left-hidden')
       lengthOfBlockade--
@@ -93,6 +100,11 @@ document.addEventListener('DOMContentLoaded', () =>{
       endOfBlockade = startOfBlockade
       leftBlockade = rightBlockade
       lengthOfBlockade--
+
+      //Bottom row
+    } else if (rowIndex === width - 1 && columnIndex !== 0 && columnIndex !== width - shipLength) {
+      console.log('bottom row')
+      endOfBlockade = startOfBlockade
 
       //If ship is bottom right corner
     } else if ((randomIndex + shipLength) % 10 === 0 && rowIndex === width - 1) {
