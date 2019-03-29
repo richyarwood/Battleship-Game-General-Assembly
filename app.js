@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () =>{
   let squares
   let randomIndex
   let leftOfShip, rightOfShip, startOfBlockade, endOfBlockade
+  let orientation
 
   function createGrid() {
     for (let i = 0; i < (width * width); i++) {
@@ -21,8 +22,11 @@ document.addEventListener('DOMContentLoaded', () =>{
   function computerPlaceShips() {
     // Choose horizontal or vertical ship
     let randomDirection = Math.random() >= 0.5
+    randomDirection = false
+    console.log(randomDirection)
 
     randomIndex = Math.floor(Math.random() * squares.length)
+    randomIndex = 19
 
     let columnIndex = (randomIndex % width)
     let rowIndex = Math.floor(randomIndex/width)
@@ -30,36 +34,75 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     //Make horizontal ship
 
-    if (randomDirection === true){
+    if (randomDirection === true) {
+      orientation = 1
       while ((width - columnIndex) < shipLength) {
         console.log('Different random index')
         randomIndex = Math.floor(Math.random() * squares.length)
         columnIndex = (randomIndex % width)
       }
-
-      for (let i = 0; i < shipLength; i++){
-        const nextIndex = randomIndex + i
-        const shipSquares = squares[nextIndex]
-        shipSquares.classList.add('ship')
-
-      }
     } else {
+      orientation = 10
       while ((rowIndex - 1 + shipLength) >= width) {
         randomIndex = Math.floor(Math.random() * squares.length)
         columnIndex = (randomIndex % width)
         rowIndex = Math.floor(randomIndex/width)
       }
-      for (let i = 0; i < shipLength; i++) {
-        const nextVerticalIndex = randomIndex + i * 10
-        const shipSquare = squares[nextVerticalIndex]
-        shipSquare.classList.add('ship')
-      }
+    }
+    for (let i = 0; i < shipLength; i++) {
+      const nextVerticalIndex = randomIndex + i * orientation
+      const shipSquare = squares[nextVerticalIndex]
+      shipSquare.classList.add('ship')
     }
 
-    blockAroundPlacedShip()
+    // if (randomDirection === true){
+      // blockAroundHorizontalShip()
+    // } else
+    blockAroundVerticalShip()
+
   }
 
-  function blockAroundPlacedShip() {
+  function blockAroundVerticalShip() {
+    let lengthOfBlockade = shipLength + 2
+    const rowIndex = Math.floor(randomIndex / width)
+    const columnIndex = (randomIndex % width)
+    console.log(columnIndex, 'Col i')
+    let startOfBlockade = (randomIndex - width + 1)
+    console.log(startOfBlockade ,'Initial start')
+    let endOfBlockade = (randomIndex - width - 1)
+    let topBlockade = (randomIndex - width)
+    let bottomBlockade = (randomIndex + (shipLength * width))
+
+    // If vertical ship against left
+    if (columnIndex === 0 && rowIndex !== 0 || rowIndex !== width - 1){
+      console.log('vertical left hand side')
+      startOfBlockade = endOfBlockade
+
+    } else if (columnIndex === width - 1 && rowIndex !== 0 || rowIndex !== width - 1) {
+      startOfBlockade = endOfBlockade
+    }
+
+
+
+
+    //Basic vertical blockade
+    squares[topBlockade].classList.add('block') // vertical top middle
+    console.log(topBlockade, 'vertical top')
+    squares[bottomBlockade].classList.add('block') // vertical bottom middle
+    console.log(bottomBlockade, 'vertical bottom')
+
+    for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
+      squares[startOfBlockade + i].classList.add('block') // vertical right side
+      console.log(startOfBlockade, 'vertical right side')
+      squares[endOfBlockade + i].classList.add('block') // vertical left side
+      console.log(endOfBlockade, 'vertical left side')
+    }
+
+  }
+
+
+
+  function blockAroundHorizontalShip() {
 
     let lengthOfBlockade = shipLength + 2
 
