@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     console.log(randomDirection)
 
     randomIndex = Math.floor(Math.random() * squares.length)
-    randomIndex = 60
+    randomIndex = 4
 
     let columnIndex = (randomIndex % width)
     let rowIndex = Math.floor(randomIndex/width)
@@ -74,14 +74,62 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
     // If vertical ship against left
-    if (columnIndex === 0 && rowIndex !== 0){
+    if (columnIndex === 0 && rowIndex !== 0 && rowIndex !== width - shipLength){
       console.log('vertical left hand side')
       endOfBlockade = startOfBlockade
 
       // If vertical ship against right
+    } else if (columnIndex === 9 && rowIndex !== 0 && rowIndex !== (width - shipLength)){
+      console.log('Vertical right hand side')
+      startOfBlockade = endOfBlockade
+
+      // If vertical ship on bottom row
+    } else if (columnIndex !== width - width && rowIndex === (width - shipLength)) {
+      bottomBlockade = topBlockade
+      lengthOfBlockade--
+
+      // If vertical ship in top left corner
+    } else if (randomIndex === 0){
+      console.log('Vertical top left corner')
+      startOfBlockade = randomIndex + 1
+      endOfBlockade = startOfBlockade
+      topBlockade = bottomBlockade
+      lengthOfBlockade--
+
+      // If vertical ship in the top right corner
+    } else if (randomIndex === 9){
+      console.log('top right corner')
+      topBlockade = randomIndex + (shipLength * width)
+      endOfBlockade = endOfBlockade + width
+      startOfBlockade = endOfBlockade
+      lengthOfBlockade--
+
+
+      //Vertical ship ends bottom right corner
+    } else if (columnIndex === width - 1 && rowIndex === width - shipLength) {
+      console.log('vertical bottom right corner')
+      startOfBlockade = endOfBlockade
+      bottomBlockade = topBlockade
+      lengthOfBlockade--
+
+      //Vertical ship ends bottom left corner
+    } else if (columnIndex === 0 && rowIndex === width - shipLength){
+      console.log('vertical bottom left')
+      endOfBlockade = startOfBlockade
+      bottomBlockade = topBlockade
+      lengthOfBlockade--
+
+      //Vertical ship top row
+    } else if (rowIndex === 0 && columnIndex !== 0 && columnIndex !== width - 1){
+      console.log('Vertical top row')
+      startOfBlockade = startOfBlockade + width
+      endOfBlockade = endOfBlockade + width
+      topBlockade = bottomBlockade
+      lengthOfBlockade--
     }
 
       //Basic vertical blockade
+      console.log('Basic vertical blockade')
       squares[topBlockade].classList.add('block') // vertical top middle
       console.log(topBlockade, 'vertical top')
       squares[bottomBlockade].classList.add('block') // vertical bottom middle
