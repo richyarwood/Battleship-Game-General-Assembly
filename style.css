@@ -65,7 +65,7 @@ div.player-square {
   width: 200px;
 }
 
-.player-choice-button {
+[class*='-button'] {
   width: 150px;
   border-radius: 2px;
   padding: 5px;

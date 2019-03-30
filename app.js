@@ -4,38 +4,85 @@ document.addEventListener('DOMContentLoaded', () => {
   const width = 10
   const shipLength = 3
   const numShips = 6
+  let playerShips = 6
+
   let squares
   let randomIndex
   let leftOfShip, rightOfShip, startOfBlockade, endOfBlockade
   let orientation
-  let playerShips = 6
+
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   let horizontalBtn = document.getElementById('placeHorizontal')
   let verticalBtn = document.getElementById('placeVertical')
 
+  let playerChoice = false
+  let playerSquares
+  let playerTurn = true
 
+  const resetBtn = document.querySelector('.reset-button')
+
+  let shipsToPlace = document.getElementById('ships-to-place')
+  let yourShipsDestroyed = document.getElementById('ships-destroyed')
+  let computerShipsDestroyed = document.getElementById('comp-destroyed')
+
+  shipsToPlace.innerText = playerShips
+  yourShipsDestroyed.innerText = 0
+  computerShipsDestroyed.innerText = 0
 
 
   function addEventListeners() {
+    playerSquares = document.querySelectorAll('div.player-square')
+
     squares.forEach(element => {
       element.addEventListener('click', checkIfHit)
     })
     shipChoiceButtons.forEach(element => {
       element.addEventListener('click', playerShipChoice)
+      playerSquares.forEach((element, index) => {
+        element.addEventListener('click', (e) => {
+          if (playerChoice && playerShips) {
+            let playerShipStart = index
+            console.log('player choice', playerShipStart)
+
+            for (let i = 0; i < shipLength; i++) {
+              const playerNextIndex = playerShipStart + i * orientation
+              const playerShipSquare = playerSquares[playerNextIndex]
+              playerShipSquare.classList.add('ship')
+            }
+            playerChoice = false
+            horizontalBtn.classList.remove('selected')
+            verticalBtn.classList.remove('selected')
+            playerShips--
+            shipsToPlace.innerText = playerShips
+          }
+        })
+      })
     })
+
+    resetBtn.addEventListener('click', resetGrid)
+  }
+
+  function resetGrid() {
+    console.log('reset')
   }
 
   function playerShipChoice() {
-    if (this.id === 'placeHorizontal') {
-      console.log('horizontal')
+    if (this.id === 'placeHorizontal' && playerShips) {
       this.classList.add('selected')
       verticalBtn.classList.remove('selected')
+      playerChoice = true
+      orientation = 1
 
-    } else {
-      console.log('vertical')
+    } else if (playerShips) {
       this.classList.add('selected')
       horizontalBtn.classList.remove('selected')
+      playerChoice = true
+      orientation = 10
     }
+  }
+
+  function playerPlaceShip() {
+    console.log(this.id)
   }
 
   function checkIfHit() {
