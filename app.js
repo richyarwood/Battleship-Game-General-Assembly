@@ -16,12 +16,11 @@ document.addEventListener('DOMContentLoaded', () =>{
       square.classList.add('square')
     }
     squares = document.querySelectorAll('.square')
-    computerPlaceShips()
+    createShips()
   }
 
   function computerPlaceShips() {
 
-    for (let i = 0; i < numShips; i++){
       // Choose horizontal or vertical ship
       let randomDirection = Math.random() >= 0.5
       randomIndex = Math.floor(Math.random() * squares.length)
@@ -45,15 +44,23 @@ document.addEventListener('DOMContentLoaded', () =>{
           rowIndex = Math.floor(randomIndex/width)
         }
       }
+      // creates ships
       for (let i = 0; i < shipLength; i++) {
-        const nextVerticalIndex = randomIndex + i * orientation
-        const shipSquare = squares[nextVerticalIndex]
+
+        const nextIndex = randomIndex + i * orientation
+        const shipSquare = squares[nextIndex]
         shipSquare.classList.add('ship')
       }
       if (randomDirection === true){
         blockAroundHorizontalShip()
       } else
       blockAroundVerticalShip()
+
+  }
+
+  function createShips(){
+    for (let i = 0; i < numShips; i++){
+      computerPlaceShips()
     }
   }
 
