@@ -2,24 +2,32 @@
   box-sizing: border-box;
 }
 
+/* GRID SET UP */
 .grid-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   height: 100vh;
-  width: 100%;
+  max-width: 1100px;
+  margin: auto;
 }
 
-.grid {
+.computer-wrapper, .player-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.grid, .player-grid {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  height: 600px;
-  width: 600px;
+  height: 380px;
+  width: 380px;
 }
 
 .block {
-  background-color: red;
+  background-color: #bdbdbd;
 }
 
 div.square {
@@ -28,6 +36,44 @@ div.square {
   border: 1px solid;
 }
 
+div.player-square {
+  width: 10%;
+  height: 10%;
+  border: 1px solid;
+}
+
 .ship {
   background-color: #000000;
+}
+
+/* HIT OR MISS */
+.miss {
+  background-color: blue;
+}
+
+.hit {
+  background-color: orange;
+}
+
+/* Player ship choices */
+.button-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 200px;
+}
+
+.player-choice-button {
+  width: 150px;
+  border-radius: 2px;
+  padding: 5px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border: 1px solid;
+}
+
+.selected {
+  background-color: red;
 }

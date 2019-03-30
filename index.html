@@ -1,18 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Battleships</title>
-    <script src="app.js" charset="utf-8"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="grid-wrapper">
-      <div class="grid">
 
+<head>
+  <meta charset="utf-8">
+  <title>Battleships</title>
+  <script src="app.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="grid-wrapper">
+
+    <div class="button-wrapper">
+
+      <p>Choose your ship direction</p>
+      <div class="player-choice-button" id="placeHorizontal">
+        Horizontal ship
       </div>
+
+      <div class="player-choice-button" id="placeVertical">
+        Vertical ship
+      </div>
+    </div>
+
+    <div class="player-wrapper">
+      <div class="player-grid"></div>
+
+      <h2>
+        Player
+      </h2>
 
     </div>
 
-  </body>
+    <div class="computer-wrapper">
+      <div class="grid"></div>
+
+      <h2>
+        Computer
+      </h2>
+
+    </div>
+  </div>
+</body>
+
 </html>
