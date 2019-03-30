@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     console.log(randomDirection)
 
     randomIndex = Math.floor(Math.random() * squares.length)
-    randomIndex = 19
+    randomIndex = 60
 
     let columnIndex = (randomIndex % width)
     let rowIndex = Math.floor(randomIndex/width)
@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () =>{
       // blockAroundHorizontalShip()
     // } else
     blockAroundVerticalShip()
-
   }
 
   function blockAroundVerticalShip() {
@@ -73,32 +72,28 @@ document.addEventListener('DOMContentLoaded', () =>{
     let topBlockade = (randomIndex - width)
     let bottomBlockade = (randomIndex + (shipLength * width))
 
+
     // If vertical ship against left
-    if (columnIndex === 0 && rowIndex !== 0 || rowIndex !== width - 1){
+    if (columnIndex === 0 && rowIndex !== 0){
       console.log('vertical left hand side')
-      startOfBlockade = endOfBlockade
+      endOfBlockade = startOfBlockade
 
-    } else if (columnIndex === width - 1 && rowIndex !== 0 || rowIndex !== width - 1) {
-      startOfBlockade = endOfBlockade
+      // If vertical ship against right
     }
 
+      //Basic vertical blockade
+      squares[topBlockade].classList.add('block') // vertical top middle
+      console.log(topBlockade, 'vertical top')
+      squares[bottomBlockade].classList.add('block') // vertical bottom middle
+      console.log(bottomBlockade, 'vertical bottom')
 
-
-
-    //Basic vertical blockade
-    squares[topBlockade].classList.add('block') // vertical top middle
-    console.log(topBlockade, 'vertical top')
-    squares[bottomBlockade].classList.add('block') // vertical bottom middle
-    console.log(bottomBlockade, 'vertical bottom')
-
-    for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
-      squares[startOfBlockade + i].classList.add('block') // vertical right side
-      console.log(startOfBlockade, 'vertical right side')
-      squares[endOfBlockade + i].classList.add('block') // vertical left side
-      console.log(endOfBlockade, 'vertical left side')
+      for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
+        squares[startOfBlockade + i].classList.add('block') // vertical right side
+        console.log(startOfBlockade, 'vertical right side')
+        squares[endOfBlockade + i].classList.add('block') // vertical left side
+        console.log(endOfBlockade, 'vertical left side')
+      }
     }
-
-  }
 
 
 
@@ -198,8 +193,5 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
   createGrid()
-
-
-
 
 })
