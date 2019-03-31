@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let squares
   let playerSquares
+  let block
 
   let randomIndex
   let leftOfShip, rightOfShip, startOfBlockade, endOfBlockade
   let orientation
+  let placeShip
 
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   const horizontalBtn = document.getElementById('placeHorizontal')
@@ -59,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetGame() {
     playerTurn = true
+    placeShip = false
     playerShips = 6
     numShips = 6
     shipsToPlace.innerText = playerShips
@@ -98,7 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Need to search the grid for squares with hit
       playerSquares.forEach((element, index) => {
-        element.filter(element.classList.contains('.player-square.ship.hit'))
+        const hitSquares = element.classList.contains('.player-square.ship.hit')
+        const hitArray = [{index, hitSquares}]
         console.log(element[index])
       })
 
@@ -156,6 +160,62 @@ document.addEventListener('DOMContentLoaded', () => {
       orientation = 10
     }
     playerAddShips()
+  }
+
+  function playerAddShips() {
+    playerSquares.forEach((element, index) => {
+      element.addEventListener('click', () => {
+
+        let playerCanPlaceShip = true
+
+        if (playerChoice && playerShips) {
+          const playerShipStart = index
+          randomIndex = playerShipStart //Sets index for blockade
+
+          const playerColumnIndex = (index % width)
+          const playerRowIndex = Math.floor(index / width)
+
+
+          if ((width - playerColumnIndex) < shipLength && orientation === 1) {
+            playerCanPlaceShip = false
+            errorMessage.innerText = 'Try again.\n Ship will go off board'
+          } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
+            playerCanPlaceShip = false
+            errorMessage.innerText = 'Try again.\n Ship will go off board'
+          } else if (playerCanPlaceShip) {
+
+            placeShip = true
+
+            for (let i = 0; i < shipLength; i++) {
+              const playerNextIndex = playerShipStart + i * orientation
+              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+              errorMessage.innerText = 'You can\'t overlap ships'
+            }
+
+            // Passes tests and can place the ship
+            if (placeShip) {
+              for (let i = 0; i < shipLength; i++) {
+                errorMessage.innerText = ''
+                const playerNextIndex = playerShipStart + i * orientation
+                const playerShipSquare = playerSquares[playerNextIndex]
+                playerShipSquare.classList.add('ship')
+                playerShipSquare.setAttribute('data-playership', playerShips)
+              }
+              if (orientation === 1){
+                blockAroundHorizontalShip()
+              } else if (orientation === 10){
+                blockAroundVerticalShip()
+              }
+              playerShips--
+            }
+            playerChoice = false
+            horizontalBtn.classList.remove('selected')
+            verticalBtn.classList.remove('selected')
+            shipsToPlace.innerText = playerShips
+          }
+        }
+      })
+    })
   }
 
 
@@ -273,13 +333,18 @@ document.addEventListener('DOMContentLoaded', () => {
       lengthOfBlockade--
     }
 
-    //Default vertical blockade
-    squares[topBlockade].classList.add('block') // vertical top middle
-    squares[bottomBlockade].classList.add('block') // vertical bottom middle
+    //Default vertical blockade and sets whether player board or computer
+    block = squares
+    if (placeShip) {
+      block = playerSquares
+    }
+
+    block[topBlockade].classList.add('block') // vertical top middle
+    block[bottomBlockade].classList.add('block') // vertical bottom middle
 
     for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
-      squares[startOfBlockade + i].classList.add('block') // vertical right side
-      squares[endOfBlockade + i].classList.add('block') // vertical left side
+      block[startOfBlockade + i].classList.add('block') // vertical right side
+      block[endOfBlockade + i].classList.add('block') // vertical left side
     }
   }
 
@@ -345,76 +410,28 @@ document.addEventListener('DOMContentLoaded', () => {
       lengthOfBlockade--
     }
 
+    block = squares
+    if (placeShip) {
+      block = playerSquares
+    }
+
     // Default blockade
     if (randomIndex === 0) {
       for (let i = 0; i < lengthOfBlockade; i++) {
-        squares[rightBlockade].classList.add('block') //right
-        squares[endOfBlockade + i].classList.add('block') // bottom
+        block[rightBlockade].classList.add('block') //right
+        block[endOfBlockade + i].classList.add('block') // bottom
       }
     } else {
-      squares[rightBlockade].classList.add('block') //right
-      squares[leftBlockade].classList.add('block') //left
+      block[rightBlockade].classList.add('block') //right
+      block[leftBlockade].classList.add('block') //left
 
       for (let i = 0; i < lengthOfBlockade; i++) {
-        squares[startOfBlockade + i].classList.add('block') // top
-        squares[endOfBlockade + i].classList.add('block') // bottom
+        block[startOfBlockade + i].classList.add('block') // top
+        block[endOfBlockade + i].classList.add('block') // bottom
       }
     }
-
-
   }
 
-
-  function playerAddShips() {
-    playerSquares.forEach((element, index) => {
-      element.addEventListener('click', () => {
-
-        let playerCanPlaceShip = true
-
-        if (playerChoice && playerShips) {
-          const playerShipStart = index
-
-          const playerColumnIndex = (index % width)
-          const playerRowIndex = Math.floor(index / width)
-
-
-          if ((width - playerColumnIndex) < shipLength && orientation === 1) {
-            playerCanPlaceShip = false
-            errorMessage.innerText = 'Try again.\n Ship will go off board'
-          } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
-            playerCanPlaceShip = false
-            errorMessage.innerText = 'Try again.\n Ship will go off board'
-          } else if (playerCanPlaceShip) {
-
-            let placeShip = true
-
-            for (let i = 0; i < shipLength; i++) {
-              const playerNextIndex = playerShipStart + i * orientation
-              const playerShipSquare = playerSquares[playerNextIndex]
-              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
-              errorMessage.innerText = 'You can\'t overlap ships'
-            }
-
-
-            if (placeShip) {
-              for (let i = 0; i < shipLength; i++) {
-                errorMessage.innerText = ''
-                const playerNextIndex = playerShipStart + i * orientation
-                const playerShipSquare = playerSquares[playerNextIndex]
-                playerShipSquare.classList.add('ship')
-                playerShipSquare.setAttribute('data-playership', playerShips)
-              }
-              playerShips--
-            }
-            playerChoice = false
-            horizontalBtn.classList.remove('selected')
-            verticalBtn.classList.remove('selected')
-            shipsToPlace.innerText = playerShips
-          }
-        }
-      })
-    })
-  }
 
   function addEventListeners() {
     playerSquares = document.querySelectorAll('div.player-square')
