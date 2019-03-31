@@ -94,36 +94,31 @@ document.addEventListener('DOMContentLoaded', () => {
       const rowHitIndex = Math.floor(nextHitGuess / width)
 
       if (nextHitGuess) {
+        console.log(nextHitGuess, 'original')
         if (columnHitIndex < width - 1 && rowHitIndex !== width - 1 && rowHitIndex !== width - width && columnHitIndex > 0) {
           // Right from hit guess
-          if (playerSquares[nextHitGuess + 1].classList.contains('ship')) {
-            playerSquares[nextHitGuess + 1].classList.add('hit')
-            nextHitGuess = nextHitGuess + 1
-            playerSquares[nextHitGuess].classList.remove('ship')
-            console.log('right hit')
+          if (playerSquares[nextHitGuess + 1].className !== 'player-square hit' || playerSquares[nextHitGuess + 1].className !== 'player-square miss') {
+
+            randomIndex = nextHitGuess + 1
+            console.log(randomIndex, 'right hit')
 
             //down from hit guess
-          } else if (playerSquares[nextHitGuess + width].classList.contains('ship')) {
-            playerSquares[nextHitGuess + width].classList.add('hit')
-            nextHitGuess = nextHitGuess + width
-            playerSquares[nextHitGuess].classList.remove('ship')
+          } else if (playerSquares[nextHitGuess + width].className !== 'player-square hit' || playerSquares[nextHitGuess + width].className !== 'player-square miss') {
+
+            randomIndex = nextHitGuess + width
             console.log('down hit')
 
             //left from hit guess
-          } else if (playerSquares[nextHitGuess - 1].classList.contains('ship')) {
-            playerSquares[nextHitGuess - 1].classList.add('hit')
-            nextHitGuess = nextHitGuess - 1
-            playerSquares[nextHitGuess].classList.remove('ship')
+          } else if (playerSquares[nextHitGuess - 1].className !== 'player-square hit' || playerSquares[nextHitGuess - 1].className !== 'player-square miss') {
+
+            randomIndex = nextHitGuess - 1
             console.log('left hit')
 
             // Up from guess
-          } else if (playerSquares[nextHitGuess - width].classList.contains('ship')) {
-            playerSquares[nextHitGuess - width].classList.add('hit')
-            console.log('up hit')
+          } else if (playerSquares[nextHitGuess - width].className !== 'player-square hit' || playerSquares[nextHitGuess - width].className !== 'player-square miss') {
 
-            nextHitGuess = nextHitGuess - width
-            playerSquares[nextHitGuess].classList.remove('ship')
-            console.log(nextHitGuess, 'reassigned next hit guess')
+            randomIndex = nextHitGuess - width
+            console.log('up hit')
           }
         }
       } else {
@@ -133,15 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
         while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
           randomIndex = Math.floor(Math.random() * playerSquares.length)
         }
-
-        // Places the computer guess
-        if (playerSquares[randomIndex].classList.contains('ship')) {
-          playerSquares[randomIndex].classList.add('hit')
-          playerSquares[randomIndex].classList.remove('ship')
-          nextHitGuess = randomIndex
-        } else {
-          playerSquares[randomIndex].classList.add('miss')
-        }
+      }
+      // Places the computer guess
+      if (playerSquares[randomIndex].classList.contains('ship')) {
+        playerSquares[randomIndex].classList.add('hit')
+        playerSquares[randomIndex].classList.remove('ship')
+        nextHitGuess = randomIndex
+        console.log(nextHitGuess, 'hit')
+      } else {
+        playerSquares[randomIndex].classList.add('miss')
+        playerSquares[randomIndex].classList.remove('block')
+        console.log(nextHitGuess , 'missed')
+        randomIndex = nextHitGuess
       }
     }
     playerTurn = true
