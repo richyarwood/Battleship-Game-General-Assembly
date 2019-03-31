@@ -59,21 +59,24 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetGame(){
     playerTurn = true
     playerShips = 6
+    numShips = 6
     shipsToPlace.innerText = playerShips
+    yourShipsDestroyed.innerText = 0
+    computerShipsDestroyed.innerText = 0
 
-    const playerSquares = document.querySelectorAll('.player-grid')
+    const playerSquares = document.querySelectorAll('.player-square')
     console.log(playerSquares)
-    const computerSquares = document.querySelectorAll('.grid')
+    const computerSquares = document.querySelectorAll('.square')
 
-    while (playerSquares.firstChild){
-      playerSquares.removeChild(playerSquares.firstChild)
-    }
-    while (computerSquares.firstChild){
-      computerSquares.removeChild(computerSquares.firstChild)
-    }
-    console.log('game reset')
+    playerSquares.forEach(element => {
+      element.className = 'player-square'
+    })
 
+    computerSquares.forEach(element => {
+      element.className = 'square'
+    })
 
+    computerPlaceShips()
   }
 
 //FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
