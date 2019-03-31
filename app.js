@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const width = 10
   const shipLength = 3
-  const numShips = 6
+  let numShips = 6
   let playerShips = 6
 
   let squares
@@ -148,8 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
-    for (let i = 0; i < numShips; i++) {
-      const shipIndex = i
+
+    while (numShips > 0){
+
+      let canPlaceShip = true
+
       // Choose horizontal or vertical ship
       const randomDirection = Math.random() >= 0.5
       randomIndex = Math.floor(Math.random() * squares.length)
@@ -174,22 +177,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       // creates ships
+
+
       for (let i = 0; i < shipLength; i++) {
-
         const nextIndex = randomIndex + i * orientation
-        const shipSquare = squares[nextIndex]
-
-        if (shipSquare.classList.contains('block') || shipSquare.classList.contains('ship')) {
-          resetGame()
-        } else {
-          shipSquare.classList.add('ship')
-          shipSquare.setAttribute('data-computership', shipIndex + 1)
-        }
+        if(squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
       }
-      if (randomDirection === true) {
-        blockAroundHorizontalShip()
-      } else
-        blockAroundVerticalShip()
+
+      if (canPlaceShip) {
+        for (let i = 0; i < shipLength; i++) {
+
+          const nextIndex = randomIndex + i * orientation
+          const shipSquare = squares[nextIndex]
+
+          shipSquare.classList.add('ship')
+          shipSquare.setAttribute('data-computership', numShips)
+        }
+        if (randomDirection === true) {
+          blockAroundHorizontalShip()
+        } else
+          blockAroundVerticalShip()
+        numShips--
+        console.log(numShips)
+      }
 
     }
   }
