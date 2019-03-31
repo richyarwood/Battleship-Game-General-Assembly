@@ -29,24 +29,28 @@ document.addEventListener('DOMContentLoaded', () => {
   yourShipsDestroyed.innerText = 0
   computerShipsDestroyed.innerText = 0
 
-
+//FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
   function computerGuess(){
-    const playerSquares = document.querySelectorAll('.player-square')
+    console.log(playerTurn)
+    if (!playerTurn){
+      const playerSquares = document.querySelectorAll('.player-square')
 
-    randomIndex = Math.floor(Math.random() * playerSquares.length)
-
-    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
       randomIndex = Math.floor(Math.random() * playerSquares.length)
-    }
 
-    if (playerSquares[randomIndex].classList.contains('ship')) {
-      playerSquares[randomIndex].classList.add('hit')
-    } else {
-      playerSquares[randomIndex].classList.add('miss')
+      while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+        randomIndex = Math.floor(Math.random() * playerSquares.length)
+      }
+
+      if (playerSquares[randomIndex].classList.contains('ship')) {
+        playerSquares[randomIndex].classList.add('hit')
+      } else {
+        playerSquares[randomIndex].classList.add('miss')
+      }
+      playerTurn = true
     }
-    playerTurn = true
   }
 
+//FUNCTION TO CHECK IF IS A HIT OR A MISS=================
   function checkIfHit() {
     console.log(playerTurn)
     if (playerShips === 0 && playerTurn){
@@ -54,23 +58,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (this.classList.contains('ship')) {
         this.classList.remove('ship')
         this.classList.add('hit')
+        playerTurn = false
       } else {
         this.classList.add('miss')
+        playerTurn = false
       }
     } else {
       alert('You need to place your ships first')
     }
-    playerTurn = false
     console.log(playerTurn)
 
     computerGuess()
   }
 
-  function resetGrid() {
-    console.log('reset')
-  }
 
-// SETS AND SWITCHEWS THE PLAYER CHOICE BUTTONS
+// SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
   function playerShipChoice() {
     if (this.id === 'placeHorizontal' && playerShips) {
       this.classList.add('selected')
@@ -84,9 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
       playerChoice = true
       orientation = 10
     }
+    playerAddShips()
   }
 
-
+//CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
   function createGrid() {
     for (let i = 0; i < (width * width); i++) {
       const square = document.createElement('div')
@@ -94,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       square.classList.add('square')
     }
     squares = document.querySelectorAll('.square')
-    createShips()
+    computerPlaceShips()
     for (let i = 0; i < (width * width); i++) {
       const square = document.createElement('div')
       document.querySelector('.player-grid').appendChild(square)
@@ -103,48 +106,45 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListeners()
   }
 
+
+//GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
-
-    // Choose horizontal or vertical ship
-    const randomDirection = Math.random() >= 0.5
-    randomIndex = Math.floor(Math.random() * squares.length)
-
-    let columnIndex = (randomIndex % width)
-    let rowIndex = Math.floor(randomIndex / width)
-
-    //Make horizontal ship
-    if (randomDirection === true) {
-      orientation = 1
-      while ((width - columnIndex) < shipLength) {
-        randomIndex = Math.floor(Math.random() * squares.length)
-        columnIndex = (randomIndex % width)
-      }
-      // Make vertical ship
-    } else {
-      orientation = 10
-      while ((rowIndex - 1 + shipLength) >= width) {
-        randomIndex = Math.floor(Math.random() * squares.length)
-        columnIndex = (randomIndex % width)
-        rowIndex = Math.floor(randomIndex / width)
-      }
-    }
-    // creates ships
-    for (let i = 0; i < shipLength; i++) {
-
-      const nextIndex = randomIndex + i * orientation
-      const shipSquare = squares[nextIndex]
-      shipSquare.classList.add('ship')
-    }
-    if (randomDirection === true) {
-      blockAroundHorizontalShip()
-    } else
-      blockAroundVerticalShip()
-
-  }
-
-  function createShips() {
     for (let i = 0; i < numShips; i++) {
-      computerPlaceShips()
+      // Choose horizontal or vertical ship
+      const randomDirection = Math.random() >= 0.5
+      randomIndex = Math.floor(Math.random() * squares.length)
+
+      let columnIndex = (randomIndex % width)
+      let rowIndex = Math.floor(randomIndex / width)
+
+      //Make horizontal ship
+      if (randomDirection === true) {
+        orientation = 1
+        while ((width - columnIndex) < shipLength) {
+          randomIndex = Math.floor(Math.random() * squares.length)
+          columnIndex = (randomIndex % width)
+        }
+        // Make vertical ship
+      } else {
+        orientation = 10
+        while ((rowIndex - 1 + shipLength) >= width) {
+          randomIndex = Math.floor(Math.random() * squares.length)
+          columnIndex = (randomIndex % width)
+          rowIndex = Math.floor(randomIndex / width)
+        }
+      }
+      // creates ships
+      for (let i = 0; i < shipLength; i++) {
+
+        const nextIndex = randomIndex + i * orientation
+        const shipSquare = squares[nextIndex]
+        shipSquare.classList.add('ship')
+      }
+      if (randomDirection === true) {
+        blockAroundHorizontalShip()
+      } else
+        blockAroundVerticalShip()
+
     }
   }
 
@@ -299,24 +299,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
+  function playerAddShips() {
+    playerSquares.forEach((element, index) => {
+      element.addEventListener('click', () => {
 
+        if (playerChoice && playerShips) {
+          const playerShipStart = index
 
-  function addEventListeners() {
-    playerSquares = document.querySelectorAll('div.player-square')
+          const playerColumnIndex = (index % width)
+          const playerRowIndex = Math.floor(index / width)
 
-    // HIT DETECTION
-    squares.forEach(element => {
-      element.addEventListener('click', checkIfHit)
-    })
+          if ((width - playerColumnIndex) < shipLength) {
+            alert('Choose a different square. You ship will go off the board')
+            console.log('h error')
 
-    //WHERE A PLAYER PLACES A SHIP
-    shipChoiceButtons.forEach(element => {
-      element.addEventListener('click', playerShipChoice)
-
-      playerSquares.forEach((element, index) => {
-        element.addEventListener('click', () => {
-          if (playerChoice && playerShips) {
-            const playerShipStart = index
+          } else if ((playerRowIndex - 1 + shipLength) >= width) {
+            alert('Choose a different square. You ship will go off the board')
+            console.log('v error')
+          } else {
             for (let i = 0; i < shipLength; i++) {
               const playerNextIndex = playerShipStart + i * orientation
               const playerShipSquare = playerSquares[playerNextIndex]
@@ -329,12 +329,30 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(playerShips)
             shipsToPlace.innerText = playerShips
           }
-        })
+        }
       })
     })
   }
 
-  resetBtn.addEventListener('click', resetGrid)
+  function addEventListeners() {
+    playerSquares = document.querySelectorAll('div.player-square')
+
+    // HIT DETECTION
+    squares.forEach(element => {
+      element.addEventListener('click', checkIfHit)
+    })
+
+    //WHERE A PLAYER PLACES A SHIP
+    shipChoiceButtons.forEach(element => {
+      element.addEventListener('click', playerShipChoice)
+    })
+  }
+
+  resetBtn.addEventListener('click', resetGame)
+
+  function resetGame(){
+    console.log('reset')
+  }
 
   createGrid()
 
