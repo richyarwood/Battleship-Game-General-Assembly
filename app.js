@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startOfBlockade = endOfBlockade
 
       // If vertical ship on bottom row
-    } else if (columnIndex !== width - width && rowIndex === (width - shipLength)) {
+    } else if (columnIndex !== width - width && columnIndex !== width -1 && rowIndex === (width - shipLength)) {
       bottomBlockade = topBlockade
       lengthOfBlockade--
 
@@ -242,10 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
       startOfBlockade = endOfBlockade
       lengthOfBlockade--
 
-
       //Vertical ship ends bottom right corner
     } else if (columnIndex === width - 1 && rowIndex === width - shipLength) {
-      startOfBlockade = endOfBlockade
+      console.log('right side')
+      startOfBlockade = startOfBlockade - 2
       bottomBlockade = topBlockade
       lengthOfBlockade--
 
@@ -268,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     squares[bottomBlockade].classList.add('block') // vertical bottom middle
 
     for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
+      console.log('default')
       squares[startOfBlockade + i].classList.add('block') // vertical right side
       squares[endOfBlockade + i].classList.add('block') // vertical left side
     }
