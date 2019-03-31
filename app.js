@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const shipsToPlace = document.getElementById('ships-to-place')
   const yourShipsDestroyed = document.getElementById('ships-destroyed')
   const computerShipsDestroyed = document.getElementById('comp-destroyed')
+  const errorMessage = document.querySelector('.error-message')
 
   shipsToPlace.innerText = playerShips
   yourShipsDestroyed.innerText = 0
@@ -379,8 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
             playerCanPlaceShip = false
+            errorMessage.innerText = 'Try again.\n Ship will go off board'
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
             playerCanPlaceShip = false
+            errorMessage.innerText = 'Try again.\n Ship will go off board'
           } else if (playerCanPlaceShip) {
 
             let placeShip = true
@@ -389,11 +392,13 @@ document.addEventListener('DOMContentLoaded', () => {
               const playerNextIndex = playerShipStart + i * orientation
               const playerShipSquare = playerSquares[playerNextIndex]
               if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+              errorMessage.innerText = 'You can\'t overlap ships'
             }
 
 
             if (placeShip) {
               for (let i = 0; i < shipLength; i++) {
+                errorMessage.innerText = ''
                 const playerNextIndex = playerShipStart + i * orientation
                 const playerShipSquare = playerSquares[playerNextIndex]
                 playerShipSquare.classList.add('ship')
