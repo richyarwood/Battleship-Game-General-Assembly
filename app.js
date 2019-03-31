@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   computerShipsDestroyed.innerText = 0
 
 
-//CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
+  //CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
   function createGrid() {
 
     //Computer grid
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  function resetGame(){
+  function resetGame() {
     playerTurn = true
     playerShips = 6
     numShips = 6
@@ -79,10 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
     computerPlaceShips()
   }
 
-//FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
-  function computerGuess(){
-    console.log(playerTurn)
-    if (!playerTurn){
+  //FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
+  function computerGuess() {
+    if (!playerTurn) {
+
+      // Need to search the grid for squares with hit
+      let hitSquareFinder = document.querySelectorAll('div.player-square.ship.hit')
+      console.log(hitSquareFinder)
+      // If find a square with hit, get the index
+      // Make the randomindex this index and then choose a square near it
+      // But do not choose a square near it if it is a hit or a miss
 
       randomIndex = Math.floor(Math.random() * playerSquares.length)
 
@@ -99,10 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function checkIfDestroyed (){
+  function checkIfDestroyed() {
     playerSquares.forEach(element => {
       const playerSquareValue = [element.dataset.playership]
-      console.log(playerSquareValue)
     })
 
     // look for all of the values
@@ -111,17 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-//FUNCTION TO CHECK IF IS A HIT OR A MISS=================
+  //FUNCTION TO CHECK IF IS A HIT OR A MISS=================
   function checkIfHit() {
-    console.log(playerTurn)
-    if (playerShips === 0 && playerTurn){
+    if (playerShips === 0 && playerTurn) {
 
       if (this.classList.contains('ship')) {
-        this.classList.remove('ship')
         this.classList.add('hit')
         playerTurn = false
+        this.removeEventListener('click', checkIfHit)
       } else {
         this.classList.add('miss')
+        this.removeEventListener('click', checkIfHit)
         playerTurn = false
       }
     } else {
@@ -131,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-// SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
+  // SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
   function playerShipChoice() {
     if (this.id === 'placeHorizontal' && playerShips) {
       this.classList.add('selected')
@@ -149,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-//GENERATES THE COMPUTER SHIPS ====================
+  //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
 
-    while (numShips > 0){
+    while (numShips > 0) {
 
       let canPlaceShip = true
 
@@ -184,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       for (let i = 0; i < shipLength; i++) {
         const nextIndex = randomIndex + i * orientation
-        if(squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
+        if (squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
       }
 
       if (canPlaceShip) {
@@ -201,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else
           blockAroundVerticalShip()
         numShips--
-        console.log(numShips)
       }
 
     }
@@ -227,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startOfBlockade = endOfBlockade
 
       // If vertical ship on bottom row
-    } else if (columnIndex !== width - width && columnIndex !== width -1 && rowIndex === (width - shipLength)) {
+    } else if (columnIndex !== width - width && columnIndex !== width - 1 && rowIndex === (width - shipLength)) {
       bottomBlockade = topBlockade
       lengthOfBlockade--
 
@@ -247,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       //Vertical ship ends bottom right corner
     } else if (columnIndex === width - 1 && rowIndex === width - shipLength) {
-      console.log('right side')
       startOfBlockade = startOfBlockade - 2
       bottomBlockade = topBlockade
       lengthOfBlockade--
@@ -271,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
     squares[bottomBlockade].classList.add('block') // vertical bottom middle
 
     for (let i = 0; i < ((lengthOfBlockade) * width); i = i + 10) {
-      console.log('default')
       squares[startOfBlockade + i].classList.add('block') // vertical right side
       squares[endOfBlockade + i].classList.add('block') // vertical left side
     }
@@ -369,12 +371,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const playerColumnIndex = (index % width)
           const playerRowIndex = Math.floor(index / width)
 
-          if ((width - playerColumnIndex) < shipLength) {
-            alert('Choose a different square. You ship will go off the board')
+
+          if ((width - playerColumnIndex) < shipLength && orientation === 1) {
+            alert('Choose a different square. Your ship will go off the board')
             console.log('h error')
 
-          } else if ((playerRowIndex - 1 + shipLength) >= width) {
-            alert('Choose a different square. You ship will go off the board')
+          } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
+            alert('Choose a different square. Your ship will go off the board')
             console.log('v error')
           } else {
             for (let i = 0; i < shipLength; i++) {
