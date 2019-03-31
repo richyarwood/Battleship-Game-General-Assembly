@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let orientation
   let placeShip
 
+  let nextHitGuess
+
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   const horizontalBtn = document.getElementById('placeHorizontal')
   const verticalBtn = document.getElementById('placeVertical')
@@ -84,34 +86,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
   function computerGuess() {
+
     if (!playerTurn) {
 
+      // If there has been one hit try this
+      const columnHitIndex = nextHitGuess % width
+      const rowHitIndex = Math.floor(nextHitGuess / width)
 
-      randomIndex = Math.floor(Math.random() * playerSquares.length)
+      if (nextHitGuess) {
+        if (columnHitIndex < width - 1 && rowHitIndex !== width - 1 && rowHitIndex !== width - width && columnHitIndex > 0) {
+          // Right from hit guess
+          if (playerSquares[nextHitGuess + 1].classList.contains('ship')) {
+            playerSquares[nextHitGuess + 1].classList.add('hit')
+            nextHitGuess = nextHitGuess + 1
+            playerSquares[nextHitGuess].classList.remove('ship')
+            console.log('right hit')
 
-      while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
-        randomIndex = Math.floor(Math.random() * playerSquares.length)
-      }
+            //down from hit guess
+          } else if (playerSquares[nextHitGuess + width].classList.contains('ship')) {
+            playerSquares[nextHitGuess + width].classList.add('hit')
+            nextHitGuess = nextHitGuess + width
+            playerSquares[nextHitGuess].classList.remove('ship')
+            console.log('down hit')
 
-      if (playerSquares[randomIndex].classList.contains('ship')) {
-        playerSquares[randomIndex].classList.add('hit')
+            //left from hit guess
+          } else if (playerSquares[nextHitGuess - 1].classList.contains('ship')) {
+            playerSquares[nextHitGuess - 1].classList.add('hit')
+            nextHitGuess = nextHitGuess - 1
+            playerSquares[nextHitGuess].classList.remove('ship')
+            console.log('left hit')
+
+            // Up from guess
+          } else if (playerSquares[nextHitGuess - width].classList.contains('ship')) {
+            playerSquares[nextHitGuess - width].classList.add('hit')
+            console.log('up hit')
+
+            nextHitGuess = nextHitGuess - width
+            playerSquares[nextHitGuess].classList.remove('ship')
+            console.log(nextHitGuess, 'reassigned next hit guess')
+          }
+        }
       } else {
-        playerSquares[randomIndex].classList.add('miss')
+        console.log('computer guess')
+        randomIndex = Math.floor(Math.random() * playerSquares.length)
+
+        while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+          randomIndex = Math.floor(Math.random() * playerSquares.length)
+        }
+
+        // Places the computer guess
+        if (playerSquares[randomIndex].classList.contains('ship')) {
+          playerSquares[randomIndex].classList.add('hit')
+          playerSquares[randomIndex].classList.remove('ship')
+          nextHitGuess = randomIndex
+        } else {
+          playerSquares[randomIndex].classList.add('miss')
+        }
       }
-
-      // Need to search the grid for squares with hit
-      playerSquares.forEach((element, index) => {
-        const hitSquares = element.classList.contains('.player-square.ship.hit')
-        const hitArray = [{index, hitSquares}]
-        console.log(element[index])
-      })
-
-      // If find a square with hit, get the index
-      // Make the randomindex this index and then choose a square near it
-      // But do not choose a square near it if it is a hit or a miss
-
-      playerTurn = true
     }
+    playerTurn = true
   }
 
   function checkIfDestroyed() {
