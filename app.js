@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     computerShipsDestroyed.innerText = 0
 
     const playerSquares = document.querySelectorAll('.player-square')
-    console.log(playerSquares)
     const computerSquares = document.querySelectorAll('.square')
 
     playerSquares.forEach(element => {
@@ -83,12 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function computerGuess() {
     if (!playerTurn) {
 
-      // Need to search the grid for squares with hit
-      let hitSquareFinder = document.querySelectorAll('div.player-square.ship.hit')
-      console.log(hitSquareFinder)
-      // If find a square with hit, get the index
-      // Make the randomindex this index and then choose a square near it
-      // But do not choose a square near it if it is a hit or a miss
 
       randomIndex = Math.floor(Math.random() * playerSquares.length)
 
@@ -101,6 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         playerSquares[randomIndex].classList.add('miss')
       }
+
+      // Need to search the grid for squares with hit
+      playerSquares.forEach((element, index) => {
+        element.filter(element.classList.contains('.player-square.ship.hit'))
+        console.log(element[index])
+      })
+
+      // If find a square with hit, get the index
+      // Make the randomindex this index and then choose a square near it
+      // But do not choose a square near it if it is a hit or a miss
+
       playerTurn = true
     }
   }
@@ -175,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
           randomIndex = Math.floor(Math.random() * squares.length)
           columnIndex = (randomIndex % width)
         }
+
         // Make vertical ship
       } else {
         orientation = 10
@@ -184,9 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
           rowIndex = Math.floor(randomIndex / width)
         }
       }
+
       // creates ships
-
-
       for (let i = 0; i < shipLength; i++) {
         const nextIndex = randomIndex + i * orientation
         if (squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
@@ -207,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
           blockAroundVerticalShip()
         numShips--
       }
-
     }
   }
 
@@ -365,6 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
 
+        let playerCanPlaceShip = true
+
         if (playerChoice && playerShips) {
           const playerShipStart = index
 
@@ -373,24 +378,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
-            alert('Choose a different square. Your ship will go off the board')
-            console.log('h error')
-
+            playerCanPlaceShip = false
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
-            alert('Choose a different square. Your ship will go off the board')
-            console.log('v error')
-          } else {
+            playerCanPlaceShip = false
+          } else if (playerCanPlaceShip) {
+
+            let placeShip = true
+
             for (let i = 0; i < shipLength; i++) {
               const playerNextIndex = playerShipStart + i * orientation
               const playerShipSquare = playerSquares[playerNextIndex]
-              playerShipSquare.classList.add('ship')
-              playerShipSquare.setAttribute('data-playership', playerShips)
+              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+            }
+
+
+            if (placeShip) {
+              for (let i = 0; i < shipLength; i++) {
+                const playerNextIndex = playerShipStart + i * orientation
+                const playerShipSquare = playerSquares[playerNextIndex]
+                playerShipSquare.classList.add('ship')
+                playerShipSquare.setAttribute('data-playership', playerShips)
+              }
+              playerShips--
             }
             playerChoice = false
             horizontalBtn.classList.remove('selected')
             verticalBtn.classList.remove('selected')
-            playerShips--
-            console.log(playerShips)
             shipsToPlace.innerText = playerShips
           }
         }
