@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerShips = 6
 
   let squares
+  let playerSquares
+
   let randomIndex
   let leftOfShip, rightOfShip, startOfBlockade, endOfBlockade
   let orientation
@@ -16,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const verticalBtn = document.getElementById('placeVertical')
 
   let playerChoice = false
-  let playerSquares
   let playerTurn = true
 
   const resetBtn = document.querySelector('.reset-button')
@@ -29,11 +30,56 @@ document.addEventListener('DOMContentLoaded', () => {
   yourShipsDestroyed.innerText = 0
   computerShipsDestroyed.innerText = 0
 
+
+//CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
+  function createGrid() {
+
+    //Computer grid
+    for (let i = 0; i < (width * width); i++) {
+      const square = document.createElement('div')
+      document.querySelector('.grid').appendChild(square)
+      square.classList.add('square')
+      square.setAttribute('data-computership', '0')
+    }
+    squares = document.querySelectorAll('.square')
+
+    for (let i = 0; i < (width * width); i++) {
+      const square = document.createElement('div')
+      document.querySelector('.player-grid').appendChild(square)
+      square.classList.add('player-square')
+      square.setAttribute('data-playership', '0')
+    }
+    playerSquares = document.querySelectorAll('.player-square')
+
+    computerPlaceShips()
+    addEventListeners()
+  }
+
+
+  function resetGame(){
+    playerTurn = true
+    playerShips = 6
+    shipsToPlace.innerText = playerShips
+
+    const playerSquares = document.querySelectorAll('.player-grid')
+    console.log(playerSquares)
+    const computerSquares = document.querySelectorAll('.grid')
+
+    while (playerSquares.firstChild){
+      playerSquares.removeChild(playerSquares.firstChild)
+    }
+    while (computerSquares.firstChild){
+      computerSquares.removeChild(computerSquares.firstChild)
+    }
+    console.log('game reset')
+
+
+  }
+
 //FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
   function computerGuess(){
     console.log(playerTurn)
     if (!playerTurn){
-      const playerSquares = document.querySelectorAll('.player-square')
 
       randomIndex = Math.floor(Math.random() * playerSquares.length)
 
@@ -49,6 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
       playerTurn = true
     }
   }
+
+  function checkIfDestroyed (){
+    playerSquares.forEach(element => {
+      const playerSquareValue = [element.dataset.playership]
+      console.log(playerSquareValue)
+    })
+
+    // look for all of the values
+    // if all of a value also has class of hit, add a class of destroyed
+    //
+  }
+
 
 //FUNCTION TO CHECK IF IS A HIT OR A MISS=================
   function checkIfHit() {
@@ -66,8 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       alert('You need to place your ships first')
     }
-    console.log(playerTurn)
-
     computerGuess()
   }
 
@@ -89,27 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
     playerAddShips()
   }
 
-//CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
-  function createGrid() {
-    for (let i = 0; i < (width * width); i++) {
-      const square = document.createElement('div')
-      document.querySelector('.grid').appendChild(square)
-      square.classList.add('square')
-    }
-    squares = document.querySelectorAll('.square')
-    computerPlaceShips()
-    for (let i = 0; i < (width * width); i++) {
-      const square = document.createElement('div')
-      document.querySelector('.player-grid').appendChild(square)
-      square.classList.add('player-square')
-    }
-    addEventListeners()
-  }
-
 
 //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
     for (let i = 0; i < numShips; i++) {
+      const shipIndex = i
       // Choose horizontal or vertical ship
       const randomDirection = Math.random() >= 0.5
       randomIndex = Math.floor(Math.random() * squares.length)
@@ -138,7 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nextIndex = randomIndex + i * orientation
         const shipSquare = squares[nextIndex]
-        shipSquare.classList.add('ship')
+
+        if (shipSquare.classList.contains('block') || shipSquare.classList.contains('ship')) {
+          resetGame()
+        } else {
+          shipSquare.classList.add('ship')
+          shipSquare.setAttribute('data-computership', shipIndex + 1)
+        }
       }
       if (randomDirection === true) {
         blockAroundHorizontalShip()
@@ -321,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
               const playerNextIndex = playerShipStart + i * orientation
               const playerShipSquare = playerSquares[playerNextIndex]
               playerShipSquare.classList.add('ship')
+              playerShipSquare.setAttribute('data-playership', playerShips)
             }
             playerChoice = false
             horizontalBtn.classList.remove('selected')
@@ -349,10 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   resetBtn.addEventListener('click', resetGame)
-
-  function resetGame(){
-    console.log('reset')
-  }
 
   createGrid()
 
