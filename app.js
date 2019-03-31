@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let orientation
 
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
-  let horizontalBtn = document.getElementById('placeHorizontal')
-  let verticalBtn = document.getElementById('placeVertical')
+  const horizontalBtn = document.getElementById('placeHorizontal')
+  const verticalBtn = document.getElementById('placeVertical')
 
   let playerChoice = false
   let playerSquares
@@ -21,51 +21,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const resetBtn = document.querySelector('.reset-button')
 
-  let shipsToPlace = document.getElementById('ships-to-place')
-  let yourShipsDestroyed = document.getElementById('ships-destroyed')
-  let computerShipsDestroyed = document.getElementById('comp-destroyed')
+  const shipsToPlace = document.getElementById('ships-to-place')
+  const yourShipsDestroyed = document.getElementById('ships-destroyed')
+  const computerShipsDestroyed = document.getElementById('comp-destroyed')
 
   shipsToPlace.innerText = playerShips
   yourShipsDestroyed.innerText = 0
   computerShipsDestroyed.innerText = 0
 
 
-  function addEventListeners() {
-    playerSquares = document.querySelectorAll('div.player-square')
+  function computerGuess(){
+    const playerSquares = document.querySelectorAll('.player-square')
 
-    squares.forEach(element => {
-      element.addEventListener('click', checkIfHit)
-    })
-    shipChoiceButtons.forEach(element => {
-      element.addEventListener('click', playerShipChoice)
-      playerSquares.forEach((element, index) => {
-        element.addEventListener('click', (e) => {
-          if (playerChoice && playerShips) {
-            let playerShipStart = index
-            console.log('player choice', playerShipStart)
+    randomIndex = Math.floor(Math.random() * playerSquares.length)
 
-            for (let i = 0; i < shipLength; i++) {
-              const playerNextIndex = playerShipStart + i * orientation
-              const playerShipSquare = playerSquares[playerNextIndex]
-              playerShipSquare.classList.add('ship')
-            }
-            playerChoice = false
-            horizontalBtn.classList.remove('selected')
-            verticalBtn.classList.remove('selected')
-            playerShips--
-            shipsToPlace.innerText = playerShips
-          }
-        })
-      })
-    })
+    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+      randomIndex = Math.floor(Math.random() * playerSquares.length)
+    }
 
-    resetBtn.addEventListener('click', resetGrid)
+    if (playerSquares[randomIndex].classList.contains('ship')) {
+      playerSquares[randomIndex].classList.add('hit')
+    } else {
+      playerSquares[randomIndex].classList.add('miss')
+    }
+    playerTurn = true
+  }
+
+  function checkIfHit() {
+    console.log(playerTurn)
+    if (playerShips === 0 && playerTurn){
+
+      if (this.classList.contains('ship')) {
+        this.classList.remove('ship')
+        this.classList.add('hit')
+      } else {
+        this.classList.add('miss')
+      }
+    } else {
+      alert('You need to place your ships first')
+    }
+    playerTurn = false
+    console.log(playerTurn)
+
+    computerGuess()
   }
 
   function resetGrid() {
     console.log('reset')
   }
 
+// SETS AND SWITCHEWS THE PLAYER CHOICE BUTTONS
   function playerShipChoice() {
     if (this.id === 'placeHorizontal' && playerShips) {
       this.classList.add('selected')
@@ -81,18 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function playerPlaceShip() {
-    console.log(this.id)
-  }
-
-  function checkIfHit() {
-    if (this.classList.contains('ship')) {
-      this.classList.remove('ship')
-      this.classList.add('hit')
-    } else {
-      this.classList.add('miss')
-    }
-  }
 
   function createGrid() {
     for (let i = 0; i < (width * width); i++) {
@@ -113,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function computerPlaceShips() {
 
     // Choose horizontal or vertical ship
-    let randomDirection = Math.random() >= 0.5
+    const randomDirection = Math.random() >= 0.5
     randomIndex = Math.floor(Math.random() * squares.length)
 
     let columnIndex = (randomIndex % width)
@@ -305,6 +298,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+
+
+
+  function addEventListeners() {
+    playerSquares = document.querySelectorAll('div.player-square')
+
+    // HIT DETECTION
+    squares.forEach(element => {
+      element.addEventListener('click', checkIfHit)
+    })
+
+    //WHERE A PLAYER PLACES A SHIP
+    shipChoiceButtons.forEach(element => {
+      element.addEventListener('click', playerShipChoice)
+
+      playerSquares.forEach((element, index) => {
+        element.addEventListener('click', () => {
+          if (playerChoice && playerShips) {
+            const playerShipStart = index
+            for (let i = 0; i < shipLength; i++) {
+              const playerNextIndex = playerShipStart + i * orientation
+              const playerShipSquare = playerSquares[playerNextIndex]
+              playerShipSquare.classList.add('ship')
+            }
+            playerChoice = false
+            horizontalBtn.classList.remove('selected')
+            verticalBtn.classList.remove('selected')
+            playerShips--
+            console.log(playerShips)
+            shipsToPlace.innerText = playerShips
+          }
+        })
+      })
+    })
+  }
+
+  resetBtn.addEventListener('click', resetGrid)
 
   createGrid()
 
