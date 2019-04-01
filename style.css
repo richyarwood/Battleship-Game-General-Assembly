@@ -22,15 +22,26 @@ main {
   align-items: center;
   margin: auto;
   height: 100vh;
+  max-width: 1100px;
+}
+
+.main-wrapper {
+  display: flex;
+  justify-content: column;
+}
+
+.central-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
 }
 
 /* GRID SET UP */
 .grid-wrapper {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  max-width: 1100px;
-  margin: auto;
+  justify-content: space-between;
+
 }
 
 .side-bar {
@@ -39,7 +50,7 @@ main {
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 200px;
+  width: 350px;
 }
 
 .computer-wrapper, .player-wrapper {

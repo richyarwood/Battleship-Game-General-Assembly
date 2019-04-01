@@ -11,55 +11,68 @@
 
 <body>
   <main>
-    <h1>Battleship</h1>
+    <div class="main-head">
+      <h1>Battleship</h1>
+    </div>
 
-    <div class="grid-wrapper">
+    <div class="main-wrapper">
+
       <div class="side-bar">
         <p>Choose your ship direction</p>
         <div class="button-wrapper">
-          <div class="player-choice-button" id="placeHorizontal">
-            Horizontal ship
-          </div>
+        <div class="player-choice-button" id="placeHorizontal">
+          Horizontal ship
+        </div>
 
-          <div class="player-choice-button" id="placeVertical">
-            Vertical ship
-          </div>
-          <div class="reset-button" id="placeVertical">
-            RESET GAME
-          </div>
+        <div class="player-choice-button" id="placeVertical">
+          Vertical ship
+        </div>
+        <div class="reset-button" id="placeVertical">
+          RESET GAME
+        </div>
         </div>
         <p>
           Ships left to place: <span id="ships-to-place"></span>
         </p>
-        <p>
-          Your ships destroyed: <span id="ships-destroyed"></span>
-        </p>
-        <p>
-          Computer ships destroyed: <span id="comp-destroyed"></span>
-        </p>
-        <div class="error-message"></div>
-
-
       </div>
 
-      <div class="player-wrapper">
-        <div class="player-grid"></div>
+  <div class="central-wrapper">
 
-        <h2>
-          Player
-        </h2>
+  <div class="info-bar">
+          <div class="scores">
+            <p>
+              Your ships destroyed: <span id="ships-destroyed"></span>
+            </p>
+            <p>
+              Computer ships destroyed: <span id="comp-destroyed"></span>
+            </p>
+          </div>
+
+          <div class="error-message"></div>
+        </div>
+
+
+    <div class="grid-wrapper">
+      <div class="player-wrapper">
+      <div class="player-grid"></div>
+
+      <h2>
+        Player
+      </h2>
 
       </div>
 
       <div class="computer-wrapper">
-        <div class="grid"></div>
+      <div class="grid"></div>
 
-        <h2>
-          Computer
-        </h2>
+      <h2>
+        Computer
+      </h2>
 
       </div>
     </div>
+  </div>
+</div>
 
   </main>
 </body>
