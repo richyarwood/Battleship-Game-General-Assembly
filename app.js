@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let block
 
   let randomIndex
-  let leftOfShip, rightOfShip, startOfBlockade, endOfBlockade
   let orientation
   let placeShip
 
@@ -87,10 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
     computerPlaceShips()
   }
 
-//FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
-// This function is called if hitGuessExists is true
+  //FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
+  // This function is called if hitGuessExists is true
+
+  // If nextMoveRandom array.length > 0
 
   function computerEducatedGuess() {
+    console.log(nextHitMoves, 'start')
+
+    // if (nextHitMoves.length === 0) {
+    //   console.log('last hit to null')
+    //   lastHit = null
+    //   computerGuess()
+    // }
     console.log('Educated guess is happening')
 
     let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
@@ -100,8 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss')){
       nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
+      console.log(nextHitMoves, 'spliced')
+
       nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-      nextSquare = playerSquares[nextHitMoves[nextMoveRandom]]
+      console.log(nextMoveRandom, 'random after spliced')
+      if (nextHitMoves.length === 0) {
+        lastHit = null
+        nextHitMoves = [-1, -width, 1, width]
+        computerGuess()
+      } else {
+        nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
+        console.log(nextSquare, 'Next sq post splice')
+        console.log(nextHitMoves, 'post random')
+      }
     }
 
     // Reset hitGuessExists to false once all squares used up
@@ -144,6 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       } else { // This is the start of a random guess
         console.log('computer guess')
+        lastHit = null
+        console.log(lastHit, 'guess last hit')
         randomIndex = Math.floor(Math.random() * playerSquares.length)
 
         while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
