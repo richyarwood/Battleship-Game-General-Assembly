@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let placeShip
 
   let nextHitGuess
-  let hitAchieved = true // Sets where next guess should be
+  let lastHit = null // Sets where next guess should be
+  let nextHitMoves = [-1, -width, 1, width]
 
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   const horizontalBtn = document.getElementById('placeHorizontal')
@@ -87,47 +88,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 //FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
+// This function is called if hitGuessExists is true
+
   function computerEducatedGuess() {
     console.log('Educated guess is happening')
-
-    let lastHit = randomIndex
-    console.log(lastHit, 'Last hit')
-
-    const nextHitMoves = [lastHit - 1, lastHit + 1, lastHit - width, lastHit + width]
-    console.log(nextHitMoves)
-
-    if (!hitAchieved) {
-      let moveToRemove = nextHitMoves.indexOf(nextHitMoves[nextMoveRandom])
-      nextHitMoves.splice(moveToRemove)
-      console.log(nextHitMoves, 'spliced array')
-    }
 
     let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
     console.log(nextMoveRandom, 'next move random')
 
-    let nextSquare = playerSquares[nextHitMoves[nextMoveRandom]]
-    console.log(nextSquare, 'next square')
+    let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
 
     while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss')){
+      nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
       nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
       nextSquare = playerSquares[nextHitMoves[nextMoveRandom]]
     }
 
-    randomIndex = nextHitMoves[nextMoveRandom]
+    // Reset hitGuessExists to false once all squares used up
+    randomIndex = lastHit + nextHitMoves[nextMoveRandom]
     markAsHitOrMiss()
 
   }
 
-
+  // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
     console.log(randomIndex, 'Hit or miss')
-    console.log(playerSquares[randomIndex])
+    console.log(playerSquares[randomIndex], 'Random index div')
     if (playerSquares[randomIndex].classList.contains('ship')) {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
+
       hitGuessExists = true
-      hitAchieved = true
-      console.log('hit', hitAchieved)
+      lastHit = randomIndex
       console.log(randomIndex, 'hit')
 
       playerTurn = true
@@ -135,8 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else { // Guess has missed
       playerSquares[randomIndex].classList.add('miss')
       playerSquares[randomIndex].classList.remove('block')
-      console.log('hit', hitAchieved)
-      hitAchieved = false
+
       console.log(randomIndex, 'miss')
       playerTurn = true
     }
@@ -148,9 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!playerTurn) {
 
-      let hitAchieved = false
-
-      if (hitGuessExists) { //Checks to see if there is a hit guess
+      if (lastHit) { //Checks to see if there is a hit guess
         computerEducatedGuess()
 
       } else { // This is the start of a random guess
@@ -160,14 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
         while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
           randomIndex = Math.floor(Math.random() * playerSquares.length)
 
-        } markAsHitOrMiss()
+        }
+        markAsHitOrMiss()
       }
     }
     playerTurn = true
   }
 
-
-  //FUNCTION TO CHECK IF IS A HIT OR A MISS=================
+  //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
     if (playerShips === 0 && playerTurn) {
 
