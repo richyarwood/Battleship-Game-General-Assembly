@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let placeShip
 
   let nextHitGuess
+  let hitAchieved = true // Sets where next guess should be
 
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   const horizontalBtn = document.getElementById('placeHorizontal')
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let playerChoice = false
   let playerTurn = true
+  let hitGuessExists = false
 
   const resetBtn = document.querySelector('.reset-button')
 
@@ -84,76 +86,86 @@ document.addEventListener('DOMContentLoaded', () => {
     computerPlaceShips()
   }
 
-  //FUNCTION FOR THE COMPUTER TO GUESS A SQUARE================
+//FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
+  function computerEducatedGuess() {
+
+    nextHitGuess = randomIndex
+
+    console.log(randomIndex, 'Educated guess is happening')
+
+    // Sets which logic to use
+    const columnHitIndex = nextHitGuess % width
+    const rowHitIndex = Math.floor(nextHitGuess / width)
+
+    // Guess index is in middle of board
+    if (columnHitIndex < width - 1 && rowHitIndex !== width - 1 && rowHitIndex !== width - width && columnHitIndex > 0) {
+
+      // Right from hit guess THIS IS THE FIRST
+      if (hitAchieved && (!playerSquares[nextHitGuess + 1].classList.contains('hit') || !playerSquares[nextHitGuess + 1].classList.contains('miss'))) {
+
+        randomIndex = nextHitGuess + 1
+        console.log(randomIndex, 'right hit++')
+        markAsHitOrMiss()
+
+      } else if (!hitAchieved && playerSquares[nextHitGuess].classList.contains('miss')){
+        console.log(nextHitGuess, 'missed hit - 1 guess')
+
+        randomIndex = nextHitGuess - 1
+
+        console.log(randomIndex, 'left hit - 1')
+        markAsHitOrMiss()
+
+      // This is the end if all hits are done
+      } else {
+        hitGuessExists = false
+        computerGuess()
+      }
+    }
+  }
+
+  function markAsHitOrMiss(){
+    if (playerSquares[randomIndex].classList.contains('ship')) {
+      playerSquares[randomIndex].classList.add('hit')
+      playerSquares[randomIndex].classList.remove('ship')
+      hitGuessExists = true
+      hitAchieved = true
+      console.log('hit', hitAchieved)
+      console.log(randomIndex, 'hit')
+
+      playerTurn = true
+
+    } else { // Guess has missed
+      playerSquares[randomIndex].classList.add('miss')
+      playerSquares[randomIndex].classList.remove('block')
+      console.log('hit', hitAchieved)
+      hitAchieved = false
+      console.log(randomIndex, 'miss')
+      playerTurn = true
+    }
+  }
+
+
+  //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
 
     if (!playerTurn) {
 
-      // If there has been one hit try this
-      const columnHitIndex = nextHitGuess % width
-      const rowHitIndex = Math.floor(nextHitGuess / width)
+      if (hitGuessExists) { //Checks to see if there is a hit guess
+        computerEducatedGuess()
 
-      if (nextHitGuess) {
-        console.log(nextHitGuess, 'original')
-        if (columnHitIndex < width - 1 && rowHitIndex !== width - 1 && rowHitIndex !== width - width && columnHitIndex > 0) {
-          // Right from hit guess
-          if (playerSquares[nextHitGuess + 1].className !== 'player-square hit' || playerSquares[nextHitGuess + 1].className !== 'player-square miss') {
-
-            randomIndex = nextHitGuess + 1
-            console.log(randomIndex, 'right hit')
-
-            //down from hit guess
-          } else if (playerSquares[nextHitGuess + width].className !== 'player-square hit' || playerSquares[nextHitGuess + width].className !== 'player-square miss') {
-
-            randomIndex = nextHitGuess + width
-            console.log('down hit')
-
-            //left from hit guess
-          } else if (playerSquares[nextHitGuess - 1].className !== 'player-square hit' || playerSquares[nextHitGuess - 1].className !== 'player-square miss') {
-
-            randomIndex = nextHitGuess - 1
-            console.log('left hit')
-
-            // Up from guess
-          } else if (playerSquares[nextHitGuess - width].className !== 'player-square hit' || playerSquares[nextHitGuess - width].className !== 'player-square miss') {
-
-            randomIndex = nextHitGuess - width
-            console.log('up hit')
-          }
-        }
-      } else {
+      } else { // This is the start of a random guess
         console.log('computer guess')
         randomIndex = Math.floor(Math.random() * playerSquares.length)
 
         while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
           randomIndex = Math.floor(Math.random() * playerSquares.length)
-        }
-      }
-      // Places the computer guess
-      if (playerSquares[randomIndex].classList.contains('ship')) {
-        playerSquares[randomIndex].classList.add('hit')
-        playerSquares[randomIndex].classList.remove('ship')
-        nextHitGuess = randomIndex
-        console.log(nextHitGuess, 'hit')
-      } else {
-        playerSquares[randomIndex].classList.add('miss')
-        playerSquares[randomIndex].classList.remove('block')
-        console.log(nextHitGuess , 'missed')
-        randomIndex = nextHitGuess
+
+        } markAsHitOrMiss()
       }
     }
     playerTurn = true
   }
 
-  function checkIfDestroyed() {
-    playerSquares.forEach(element => {
-      const playerSquareValue = [element.dataset.playership]
-    })
-
-    // look for all of the values
-    // if all of a value also has class of hit, add a class of destroyed
-    //
-  }
 
 
   //FUNCTION TO CHECK IF IS A HIT OR A MISS=================
@@ -174,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     computerGuess()
   }
-
 
   // SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
   function playerShipChoice() {
@@ -248,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     })
   }
-
 
   //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
@@ -379,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
   //CREATES THE BLOCKADE AROUND THE HORIZONTAL SHIP==============
   function blockAroundHorizontalShip() {
     let lengthOfBlockade = shipLength + 2
@@ -462,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-
 
   function addEventListeners() {
     playerSquares = document.querySelectorAll('div.player-square')
