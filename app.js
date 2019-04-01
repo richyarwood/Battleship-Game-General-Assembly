@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorMessage = document.querySelector('.error-message')
 
   shipsToPlace.innerText = playerShips
-  yourShipsDestroyed.innerText = 0
-  computerShipsDestroyed.innerText = 0
+  yourShipsDestroyed.innerText = 6
+  computerShipsDestroyed.innerText = 6
 
 
   //CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerTurn = false
       }
     } else {
-      alert('You need to place your ships first')
+      errorMessage.innerText = 'You need to place your ships first'
     }
     computerGuess()
   }
@@ -229,10 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
             playerCanPlaceShip = false
-            errorMessage.innerText = 'Try again.\n Ship will go off board'
+            errorMessage.innerText = 'Try again. Ship will go off board'
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
             playerCanPlaceShip = false
-            errorMessage.innerText = 'Try again.\n Ship will go off board'
+            errorMessage.innerText = 'Try again. Ship will go off board'
           } else if (playerCanPlaceShip) {
 
             placeShip = true
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Passes tests and can place the ship
             if (placeShip) {
               for (let i = 0; i < shipLength; i++) {
-                errorMessage.innerText = ''
+                errorMessage.innerText = 'Place your ships'
                 const playerNextIndex = playerShipStart + i * orientation
                 const playerShipSquare = playerSquares[playerNextIndex]
                 playerShipSquare.classList.add('ship')
@@ -258,6 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 blockAroundVerticalShip()
               }
               playerShips--
+              if (playerShips === 0){
+                errorMessage.innerText = 'Start playing'
+              }
             }
             playerChoice = false
             horizontalBtn.classList.remove('selected')
