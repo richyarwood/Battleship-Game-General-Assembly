@@ -79,10 +79,14 @@ div.player-square {
 /* HIT OR MISS */
 .miss {
   background-color: blue;
+  background-image: url('images/miss.png');
+  background-size: contain;
 }
 
 .hit {
-  background-color: orange;
+  background-color: red;
+  background-image: url('images/explosion.png');
+  background-size: contain;
 }
 
 /* Player ship choices */

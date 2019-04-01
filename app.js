@@ -88,42 +88,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
   function computerEducatedGuess() {
+    console.log('Educated guess is happening')
 
-    nextHitGuess = randomIndex
+    let lastHit = randomIndex
+    console.log(lastHit, 'Last hit')
 
-    console.log(randomIndex, 'Educated guess is happening')
+    const nextHitMoves = [lastHit - 1, lastHit + 1, lastHit - width, lastHit + width]
+    console.log(nextHitMoves)
 
-    // Sets which logic to use
-    const columnHitIndex = nextHitGuess % width
-    const rowHitIndex = Math.floor(nextHitGuess / width)
-
-    // Guess index is in middle of board
-    if (columnHitIndex < width - 1 && rowHitIndex !== width - 1 && rowHitIndex !== width - width && columnHitIndex > 0) {
-
-      // Right from hit guess THIS IS THE FIRST
-      if (hitAchieved && (!playerSquares[nextHitGuess + 1].classList.contains('hit') || !playerSquares[nextHitGuess + 1].classList.contains('miss'))) {
-
-        randomIndex = nextHitGuess + 1
-        console.log(randomIndex, 'right hit++')
-        markAsHitOrMiss()
-
-      } else if (!hitAchieved && playerSquares[nextHitGuess].classList.contains('miss')){
-        console.log(nextHitGuess, 'missed hit - 1 guess')
-
-        randomIndex = nextHitGuess - 1
-
-        console.log(randomIndex, 'left hit - 1')
-        markAsHitOrMiss()
-
-      // This is the end if all hits are done
-      } else {
-        hitGuessExists = false
-        computerGuess()
-      }
+    if (!hitAchieved) {
+      let moveToRemove = nextHitMoves.indexOf(nextHitMoves[nextMoveRandom])
+      nextHitMoves.splice(moveToRemove)
+      console.log(nextHitMoves, 'spliced array')
     }
+
+    let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+    console.log(nextMoveRandom, 'next move random')
+
+    let nextSquare = playerSquares[nextHitMoves[nextMoveRandom]]
+    console.log(nextSquare, 'next square')
+
+    while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss')){
+      nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+      nextSquare = playerSquares[nextHitMoves[nextMoveRandom]]
+    }
+
+    randomIndex = nextHitMoves[nextMoveRandom]
+    markAsHitOrMiss()
+
   }
 
+
   function markAsHitOrMiss(){
+    console.log(randomIndex, 'Hit or miss')
+    console.log(playerSquares[randomIndex])
     if (playerSquares[randomIndex].classList.contains('ship')) {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
@@ -150,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!playerTurn) {
 
+      let hitAchieved = false
+
       if (hitGuessExists) { //Checks to see if there is a hit guess
         computerEducatedGuess()
 
@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     playerTurn = true
   }
-
 
 
   //FUNCTION TO CHECK IF IS A HIT OR A MISS=================
@@ -305,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
           const shipSquare = squares[nextIndex]
 
           shipSquare.classList.add('ship')
-          shipSquare.setAttribute('data-computership', numShips)
         }
         if (randomDirection === true) {
           blockAroundHorizontalShip()
