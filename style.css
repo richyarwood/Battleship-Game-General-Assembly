@@ -5,17 +5,29 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+  background-image: url('images/battleship-background.jpg');
 }
 
 p {
   margin: 5px;
+  color: #ffffff;
 }
 
 h1 {
   font-family: 'Black Ops One', cursive;
   font-size: 60px;
   color: orange;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
 }
+
+h2 {
+  font-family: 'Black Ops One', cursive;
+  font-size: 40px;
+  color: orange;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+
+}
+
 
 main {
   display: flex;
@@ -50,7 +62,13 @@ main {
 .scores {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
   width: 380px;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 20px;
+  border-radius: 4px;
+  border: 1px solid;
 }
 
 .messages {
@@ -60,7 +78,9 @@ main {
   color: #000000;
   padding: 5px;
   border: 1px solid #000000;
+  border-radius: 4px;
   width: 380px;
+  background-color: #ffffff;
 }
 
 .error-message {
@@ -96,10 +116,11 @@ main {
   flex-direction: row;
   height: 380px;
   width: 380px;
+  background-color: #ffffff;
 }
 
 .block {
-  background-color: #bdbdbd;
+  background-color: #ffffff;
 }
 
 div.square {
@@ -118,15 +139,17 @@ div.player-square {
   background-color: #000000;
 }
 
+.square.ship {
+  background-color: #ffffff;
+}
+
 /* HIT OR MISS */
 .miss {
-  background-color: blue;
   background-image: url('images/miss.png');
   background-size: contain;
 }
 
 .hit {
-  background-color: red;
   background-image: url('images/explosion.png');
   background-size: contain;
 }
@@ -149,6 +172,8 @@ div.player-square {
   margin-bottom: 10px;
   font-size: 18px;
   border: 1px solid;
+  background-color: #ffffff;
+  border-radius: 4px;
 }
 
 .selected {

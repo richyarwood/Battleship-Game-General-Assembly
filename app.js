@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const width = 10
-  const shipLength = 3
+  let shipLength = 3
   let numShips = 6
   let playerShips = 6
   let playerShipsLeft = 6
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       playerTurn = false
-      
+
     } else {
       //Checks if computer has destroyed a ship
       const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
