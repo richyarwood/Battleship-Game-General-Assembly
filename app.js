@@ -86,48 +86,57 @@ document.addEventListener('DOMContentLoaded', () => {
     computerPlaceShips()
   }
 
+// FUNCTION DISCUSSED WITH DEX USING FILTER NOT SPLICE
+  // function educatedGuessFilterVersion(index) {
+  //   let nextHitMoves = [-1, -10, 10, 1]
+  //
+  //   guess = nextHitMoves.filter(guess => !playerSquares[index + guess].classList.contains('hit') etc)
+  //
+  //   nextSquare = playerSquares[index + guess[Math.floor(Math.random() * nextHitMoves.length)]]
+  //
+  //   randomIndex = nextSquare
+  //
+  //   markAsHitOrMiss()
+  // }
+
+
   //FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
   // This function is called if hitGuessExists is true
 
   // If nextMoveRandom array.length > 0
 
-  function computerEducatedGuess() {
-    console.log(nextHitMoves, 'start')
-
-    // if (nextHitMoves.length === 0) {
-    //   console.log('last hit to null')
-    //   lastHit = null
-    //   computerGuess()
-    // }
-    console.log('Educated guess is happening')
-
-    let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-    console.log(nextMoveRandom, 'next move random')
-
-    let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-
-    while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss')){
-      nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
-      console.log(nextHitMoves, 'spliced')
-
-      nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-      console.log(nextMoveRandom, 'random after spliced')
-      if (nextHitMoves.length === 0) {
-        lastHit = null
-        nextHitMoves = [-1, -width, 1, width]
-        computerGuess()
-      } else {
-        nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-        console.log(nextSquare, 'Next sq post splice')
-        console.log(nextHitMoves, 'post random')
-      }
-    }
-
-    // Reset hitGuessExists to false once all squares used up
-    randomIndex = lastHit + nextHitMoves[nextMoveRandom]
-    markAsHitOrMiss()
-
-  }
+  // function computerEducatedGuess() {
+  //   console.log(nextHitMoves, 'start')
+  //   console.log('Educated guess is happening')
+  //
+  //   let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+  //   console.log(nextMoveRandom, 'next move random')
+  //
+  //   let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
+  //
+  //   do {
+  //     nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
+  //     console.log(nextHitMoves, 'spliced')
+  //
+  //     nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+  //     console.log(nextMoveRandom, 'random after spliced')
+  //     if (nextHitMoves.length === 0) {
+  //       lastHit = false
+  //       nextSquare = false
+  //       nextHitMoves = [-1, -width, 1, width]
+  //       console.log('nextMoves empty')
+  //     } else {
+  //       nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
+  //       console.log(nextSquare, 'Next sq post splice')
+  //       console.log(nextHitMoves, 'post random')
+  //     }
+  //   } while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss'))
+  //
+  //   // Reset hitGuessExists to false once all squares used up
+  //   randomIndex = lastHit + nextHitMoves[nextMoveRandom]
+  //   markAsHitOrMiss()
+  //
+  // }
 
   // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
@@ -156,26 +165,18 @@ document.addEventListener('DOMContentLoaded', () => {
   //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
 
-    if (!playerTurn) {
+    // if (lastHit) { //Checks to see if there is a hit guess
+    //   computerEducatedGuess() } else { // This is the start of a random guess
+    // lastHit = false
 
-      if (lastHit) { //Checks to see if there is a hit guess
-        computerEducatedGuess()
+    randomIndex = Math.floor(Math.random() * playerSquares.length)
 
-      } else { // This is the start of a random guess
-        console.log('computer guess')
-        lastHit = null
-        console.log(lastHit, 'guess last hit')
-        randomIndex = Math.floor(Math.random() * playerSquares.length)
-
-        while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
-          randomIndex = Math.floor(Math.random() * playerSquares.length)
-
-        }
-        markAsHitOrMiss()
-      }
+    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+      randomIndex = Math.floor(Math.random() * playerSquares.length)
     }
-    playerTurn = true
+    markAsHitOrMiss()
   }
+
 
   //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
@@ -214,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerAddShips() {
+    let playerShipArray = {}
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
 

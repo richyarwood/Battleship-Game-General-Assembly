@@ -79,7 +79,6 @@ main {
 .side-bar {
   display: flex;
   flex-direction: column;
-  justify-content: flex;
   align-items: center;
   text-align: center;
   width: 350px;
@@ -153,5 +152,6 @@ div.player-square {
 }
 
 .selected {
-  background-color: red;
+  background-color: #000000;
+  color: #ffffff;
 }
