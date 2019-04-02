@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let randomIndex
   let orientation
   let placeShip
+  const playerShipsObject = {}
 
   let nextHitGuess
   let lastHit = null // Sets where next guess should be
@@ -215,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerAddShips() {
-    let playerShipArray = {}
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
 
@@ -228,50 +228,58 @@ document.addEventListener('DOMContentLoaded', () => {
           const playerColumnIndex = (index % width)
           const playerRowIndex = Math.floor(index / width)
 
-
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
             playerCanPlaceShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
             playerCanPlaceShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
-          } else if (playerCanPlaceShip) {
-
-            placeShip = true
-
-            for (let i = 0; i < shipLength; i++) {
-              const playerNextIndex = playerShipStart + i * orientation
-              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
-              errorMessage.innerText = 'You can\'t overlap ships'
-            }
-
-            // Passes tests and can place the ship
-            if (placeShip) {
-              for (let i = 0; i < shipLength; i++) {
-                errorMessage.innerText = 'Place your ships'
-                const playerNextIndex = playerShipStart + i * orientation
-                const playerShipSquare = playerSquares[playerNextIndex]
-                playerShipSquare.classList.add('ship')
-                playerShipSquare.setAttribute('data-playership', playerShips)
-              }
-              if (orientation === 1){
-                blockAroundHorizontalShip()
-              } else if (orientation === 10){
-                blockAroundVerticalShip()
-              }
-              playerShips--
-              if (playerShips === 0){
-                errorMessage.innerText = 'Start playing'
-              }
-            }
-            playerChoice = false
-            horizontalBtn.classList.remove('selected')
-            verticalBtn.classList.remove('selected')
-            shipsToPlace.innerText = playerShips
           }
+          playerPlaceShips()
         }
       })
     })
+  }
+
+  function playerPlaceShips(){
+    placeShip = true
+
+    for (let i = 0; i < shipLength; i++) {
+      const playerNextIndex = randomIndex + i * orientation
+      if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+      errorMessage.innerText = 'You can\'t overlap ships'
+    }
+
+    // Passes tests and can place the ship
+    const playerShip = []
+    let playerShipSquare
+    if (placeShip) {
+      for (let i = 0; i < shipLength; i++) {
+        errorMessage.innerText = 'Place your ships'
+        const playerNextIndex = randomIndex + i * orientation
+        playerShipSquare = playerSquares[playerNextIndex]
+        playerShipSquare.classList.add('ship')
+        playerShipSquare.setAttribute('data-playership', playerShips)
+        playerShip.push(playerNextIndex)
+      }
+
+      playerShipsObject[playerShipSquare.dataset.playership] = playerShip
+      console.log(playerShipsObject)
+
+      if (orientation === 1){
+        blockAroundHorizontalShip()
+      } else if (orientation === 10){
+        blockAroundVerticalShip()
+      }
+      playerShips--
+      if (playerShips === 0){
+        errorMessage.innerText = 'Start playing'
+      }
+    }
+    playerChoice = false
+    horizontalBtn.classList.remove('selected')
+    verticalBtn.classList.remove('selected')
+    shipsToPlace.innerText = playerShips
   }
 
   //GENERATES THE COMPUTER SHIPS ====================
