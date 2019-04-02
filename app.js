@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const square = document.createElement('div')
       document.querySelector('.grid').appendChild(square)
       square.classList.add('square')
-      square.setAttribute('data-computership', '0')
     }
     squares = document.querySelectorAll('.square')
 
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const square = document.createElement('div')
       document.querySelector('.player-grid').appendChild(square)
       square.classList.add('player-square')
-      square.setAttribute('data-playership', '0')
     }
     playerSquares = document.querySelectorAll('.player-square')
 
@@ -142,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+
   // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
 
@@ -149,25 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
 
-      let hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
-
-      let count = 0
-      for (let i = 0; i < hitArray.length; i++){
-        const hitCheck = playerSquares[hitArray[i]]
-        console.log(hitCheck, 'Checked Array')
-        if (hitCheck.classList.contains('hit')) {
-          count++
-          console.log(count, 'Count')
-        }
-        if (count === hitArray.length){
-          playerShipsLeft--
-          console.log(playerShipsLeft, 'Player ships left')
-          computerShipsDestroyed.innerText = playerShipsLeft
-
-        }
-      }
-
-
+      isShipDestroyed()
 
       hitGuessExists = true
       lastHit = randomIndex
@@ -181,6 +162,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       console.log(randomIndex, 'miss')
       playerTurn = true
+    }
+  }
+
+
+  function isShipDestroyed(){
+    const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
+    console.log(playerShipsObject)
+
+    let count = 0
+
+    for (let i = 0; i < hitArray.length; i++){
+      const hitCheck = playerSquares[hitArray[i]]
+      console.log(hitCheck, 'Checked Array')
+      if (hitCheck.classList.contains('hit')) {
+        count++
+        console.log(count, 'Count')
+      }
+      if (count === hitArray.length){
+        playerShipsLeft--
+        console.log(playerShipsLeft, 'Player ships left')
+        yourShipsDestroyed.innerText = playerShipsLeft
+      }
     }
   }
 
@@ -337,19 +340,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // creates ships
+
       for (let i = 0; i < shipLength; i++) {
         const nextIndex = randomIndex + i * orientation
         if (squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
       }
 
+      const computerShip = []
+      let shipSquare
       if (canPlaceShip) {
         for (let i = 0; i < shipLength; i++) {
-
           const nextIndex = randomIndex + i * orientation
-          const shipSquare = squares[nextIndex]
-
+          shipSquare = squares[nextIndex]
           shipSquare.classList.add('ship')
+          shipSquare.setAttribute('data-computership', numShips)
+          computerShip.push(nextIndex)
         }
+
+        computerShipsObject[shipSquare.dataset.computership] = computerShip
+
         if (randomDirection === true) {
           blockAroundHorizontalShip()
         } else
