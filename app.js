@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const shipLength = 3
   let numShips = 6
   let playerShips = 6
+  let playerShipsLeft = 6
+  let computerShipsLeft = 6
 
   let squares
   let playerSquares
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let orientation
   let placeShip
   const playerShipsObject = {}
+  const computerShipsObject = {}
 
   let nextHitGuess
   let lastHit = null // Sets where next guess should be
@@ -106,46 +109,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If nextMoveRandom array.length > 0
 
-  // function computerEducatedGuess() {
-  //   console.log(nextHitMoves, 'start')
-  //   console.log('Educated guess is happening')
-  //
-  //   let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-  //   console.log(nextMoveRandom, 'next move random')
-  //
-  //   let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-  //
-  //   do {
-  //     nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
-  //     console.log(nextHitMoves, 'spliced')
-  //
-  //     nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-  //     console.log(nextMoveRandom, 'random after spliced')
-  //     if (nextHitMoves.length === 0) {
-  //       lastHit = false
-  //       nextSquare = false
-  //       nextHitMoves = [-1, -width, 1, width]
-  //       console.log('nextMoves empty')
-  //     } else {
-  //       nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-  //       console.log(nextSquare, 'Next sq post splice')
-  //       console.log(nextHitMoves, 'post random')
-  //     }
-  //   } while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss'))
-  //
-  //   // Reset hitGuessExists to false once all squares used up
-  //   randomIndex = lastHit + nextHitMoves[nextMoveRandom]
-  //   markAsHitOrMiss()
-  //
-  // }
+  function computerEducatedGuess() {
+    console.log(nextHitMoves, 'start')
+    console.log('Educated guess is happening')
+
+    let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+    console.log(nextMoveRandom, 'next move random')
+
+    let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
+
+    do {
+      nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
+      console.log(nextHitMoves, 'spliced')
+
+      nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
+      console.log(nextMoveRandom, 'random after spliced')
+      if (nextHitMoves.length === 0) {
+        lastHit = false
+        nextSquare = false
+        nextHitMoves = [-1, -width, 1, width]
+        console.log('nextMoves empty')
+      } else {
+        nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
+        console.log(nextSquare, 'Next sq post splice')
+        console.log(nextHitMoves, 'post random')
+      }
+    } while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss'))
+
+    // Reset hitGuessExists to false once all squares used up
+    randomIndex = lastHit + nextHitMoves[nextMoveRandom]
+    markAsHitOrMiss()
+
+  }
 
   // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
-    console.log(randomIndex, 'Hit or miss')
-    console.log(playerSquares[randomIndex], 'Random index div')
+
     if (playerSquares[randomIndex].classList.contains('ship')) {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
+
+      let hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
+
+      let count = 0
+      for (let i = 0; i < hitArray.length; i++){
+        const hitCheck = playerSquares[hitArray[i]]
+        console.log(hitCheck, 'Checked Array')
+        if (hitCheck.classList.contains('hit')) {
+          count++
+          console.log(count, 'Count')
+        }
+        if (count === hitArray.length){
+          playerShipsLeft--
+          console.log(playerShipsLeft, 'Player ships left')
+          computerShipsDestroyed.innerText = playerShipsLeft
+
+        }
+      }
+
+
 
       hitGuessExists = true
       lastHit = randomIndex
