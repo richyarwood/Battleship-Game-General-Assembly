@@ -272,6 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
 
+        console.log(index)
+
         let playerCanPlaceShip = true
 
         if (playerChoice && playerShips) {
