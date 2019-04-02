@@ -8,11 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerShipsLeft = 6
   let computerShipsLeft = 6
 
-  let squares
-  let playerSquares
   let block
 
   let randomIndex
+  let clickedIndex
   let orientation
   let placeShip
   const playerShipsObject = {}
@@ -29,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerChoice = false
   let playerTurn = true
   let hitGuessExists = false
+
+  const playerSquares = []
+  const squares = []
 
   const resetBtn = document.querySelector('.reset-button')
 
@@ -50,15 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const square = document.createElement('div')
       document.querySelector('.grid').appendChild(square)
       square.classList.add('square')
+      squares.push(square)
     }
-    squares = document.querySelectorAll('.square')
 
     for (let i = 0; i < (width * width); i++) {
       const square = document.createElement('div')
       document.querySelector('.player-grid').appendChild(square)
       square.classList.add('player-square')
+      playerSquares.push(square)
     }
-    playerSquares = document.querySelectorAll('.player-square')
 
     computerPlaceShips()
     addEventListeners()
@@ -167,33 +169,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function isShipDestroyed(){
-    const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
-    console.log(playerShipsObject)
 
-    let count = 0
 
-    for (let i = 0; i < hitArray.length; i++){
-      const hitCheck = playerSquares[hitArray[i]]
-      console.log(hitCheck, 'Checked Array')
-      if (hitCheck.classList.contains('hit')) {
-        count++
-        console.log(count, 'Count')
+    if (playerTurn) {
+      //Checks if player has destroyed a ship
+      const hitArray = computerShipsObject[squares[clickedIndex].dataset.computership]
+      console.log(computerShipsObject)
+
+      let count = 0
+
+      for (let i = 0; i < hitArray.length; i++){
+        const hitCheck = squares[hitArray[i]]
+        console.log(hitCheck, 'Player Checked Array')
+        if (hitCheck.classList.contains('hit')) {
+          count++
+          console.log(count, 'Player Count')
+        }
+        if (count === hitArray.length){
+          computerShipsLeft--
+          console.log(computerShipsLeft, 'Computer ships left')
+          computerShipsDestroyed.innerText = computerShipsLeft
+        }
       }
-      if (count === hitArray.length){
-        playerShipsLeft--
-        console.log(playerShipsLeft, 'Player ships left')
-        yourShipsDestroyed.innerText = playerShipsLeft
+      playerTurn = false
+      
+    } else {
+      //Checks if computer has destroyed a ship
+      const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
+      console.log(playerShipsObject)
+
+      let count = 0
+
+      for (let i = 0; i < hitArray.length; i++){
+        const hitCheck = playerSquares[hitArray[i]]
+        console.log(hitCheck, 'Checked Array')
+        if (hitCheck.classList.contains('hit')) {
+          count++
+          console.log(count, 'Count')
+        }
+        if (count === hitArray.length){
+          playerShipsLeft--
+          console.log(playerShipsLeft, 'Player ships left')
+          yourShipsDestroyed.innerText = playerShipsLeft
+        }
       }
+
     }
   }
 
 
   //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
-
-    // if (lastHit) { //Checks to see if there is a hit guess
-    //   computerEducatedGuess() } else { // This is the start of a random guess
-    // lastHit = false
 
     randomIndex = Math.floor(Math.random() * playerSquares.length)
 
@@ -210,8 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (this.classList.contains('ship')) {
         this.classList.add('hit')
-        playerTurn = false
         this.removeEventListener('click', checkIfHit)
+        clickedIndex = squares.indexOf(this)
+        console.log(squares.indexOf(this), 'Player click')
+        isShipDestroyed()
       } else {
         this.classList.add('miss')
         this.removeEventListener('click', checkIfHit)
@@ -525,8 +553,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addEventListeners() {
-    playerSquares = document.querySelectorAll('div.player-square')
-
     // HIT DETECTION
     squares.forEach(element => {
       element.addEventListener('click', checkIfHit)
