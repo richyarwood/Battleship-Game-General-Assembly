@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const squares = []
 
   const resetBtn = document.querySelector('.reset-button')
+  const startBtn = document.querySelector('.start-button')
+  const modalWrapper = document.querySelector('.modal-wrapper')
 
   const shipsToPlace = document.getElementById('ships-to-place')
   const yourShipsDestroyed = document.getElementById('ships-destroyed')
@@ -61,9 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares.push(square)
     }
 
-    const startBtn = document.querySelector('.start-button')
-    const modalWrapper = document.querySelector('.modal-wrapper')
-
     computerPlaceShips()
     addEventListeners()
   }
@@ -75,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playerShips = 6
     numShips = 6
     shipsToPlace.innerText = playerShips
-    yourShipsDestroyed.innerText = 0
-    computerShipsDestroyed.innerText = 0
+    yourShipsDestroyed.innerText = 6
+    computerShipsDestroyed.innerText = 6
 
     const playerSquares = document.querySelectorAll('.player-square')
     const computerSquares = document.querySelectorAll('.square')
