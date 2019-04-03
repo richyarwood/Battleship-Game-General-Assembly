@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const resetBtn = document.querySelector('.reset-button')
   const startBtn = document.querySelector('.start-button')
+  const anotherGameBtn = document.querySelector('.play-again-button')
   const modalWrapper = document.querySelector('.modal-wrapper')
 
   const shipsToPlace = document.getElementById('ships-to-place')
@@ -65,6 +66,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     computerPlaceShips()
     addEventListeners()
+  }
+
+  function gameOver() {
+
+    console.log('gameover being checked')
+    modalWrapper.setAttribute('style', 'display:flex')
+
+    const instructionText = document.querySelector('.instructions-text')
+    instructionText.setAttribute('style', 'display: none')
+
+    const gameOverText = document.querySelector('.gameover-text')
+
+    const gameOver = document.querySelector('.gameover')
+    gameOver.setAttribute('style', 'display: flex')
+
+    const startImage = document.getElementById('start-image')
+    startImage.setAttribute('style', 'display: none')
+
+    startBtn.innerText = 'Want another game?'
+
+    if (playerShipsLeft === 0){
+      console.log(yourShipsDestroyed)
+      gameOverText.innerText = 'You\'ve lost the battle!!'
+
+    } else if (computerShipsLeft === 0){
+      console.log(computerShipsDestroyed)
+      gameOverText.innerText = 'You are victorious and have won the battle!!!'
+    }
   }
 
 
@@ -169,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  function isShipDestroyed(){
+  function isShipDestroyed() {
 
     if (playerTurn) {
       //Checks if player has destroyed a ship
@@ -205,6 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     }
+
+    if (computerShipsLeft === 0 || playerShipsLeft === 0) {
+      gameOver()
+    }
+
   }
 
 
@@ -574,6 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     resetBtn.addEventListener('click', resetGame)
+
+    anotherGameBtn.addEventListener('click', () => {
+      gameOver.setAttribute('style', 'display:none')
+      resetGame()
+    })
   }
 
 

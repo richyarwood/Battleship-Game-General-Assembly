@@ -216,14 +216,37 @@ main {
   background-color: #ffffff;
   margin: auto;
   border-radius: 4px;
-  padding: 30px;
+  padding: 20px;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
 }
 
-.instruction-text {
-  text-align: left;
-  display: flex;
+
+
+.instructions-column {
+  display: none;
   flex-direction: column;
   padding-right: 40px;
+  justify-content: space-evenly;
+}
+
+.instructions-text {
+  text-align: left;
+}
+
+img {
+  display: none;
+  border: 2px solid #000000;
+  border-radius: 4px;
+}
+
+.gameover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.gameover-text {
+  font-size: 50px;
+  text-align: center;
+  color: #000000;
 }
