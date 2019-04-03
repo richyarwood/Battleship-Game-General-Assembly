@@ -5,13 +5,13 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
-  background-image: url('images/battleship-background.jpg');
-  background-size: cover;
+  /* background-image: url('images/battleship-background.jpg');
+  background-size: cover; */
 }
 
 p {
   margin: 5px;
-  color: #ffffff;
+  /* color: #ffffff; */
 }
 
 h1 {
@@ -123,14 +123,15 @@ main {
 }
 
 .block {
-  background-color: rgba(255,255,255,0.1);
+  /* background-color: rgba(255,255,255,0.1); */
+  background-color: grey;
 }
 
 [class*='square'] {
   width: 10%;
   height: 10%;
   border: 1px solid rgba(189,189,189,0.5);
-  background-color: rgba(255,255,255,0.01);
+  /* background-color: rgba(255,255,255,0.01); */
 }
 
 .ship {
@@ -138,7 +139,9 @@ main {
 }
 
 .square.ship {
-  background-color: rgba(255,255,255,0.01);
+  /* background-color: rgba(255,255,255,0.01); */
+  background-color: #000000;
+
 }
 
 /* HIT OR MISS */

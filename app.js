@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     computerPlaceShips()
     addEventListeners()
+    console.log(orientation)
   }
 
 
@@ -213,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
           yourShipsDestroyed.innerText = playerShipsLeft
         }
       }
-
     }
   }
 
@@ -221,12 +221,15 @@ document.addEventListener('DOMContentLoaded', () => {
   //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
 
-    randomIndex = Math.floor(Math.random() * playerSquares.length)
-
-    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+    if(!playerTurn){
       randomIndex = Math.floor(Math.random() * playerSquares.length)
+
+      while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+        randomIndex = Math.floor(Math.random() * playerSquares.length)
+      }
+      markAsHitOrMiss()
     }
-    markAsHitOrMiss()
+
   }
 
 
@@ -272,11 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
 
-        console.log(index)
-
-        let playerCanPlaceShip = true
+        placeShip = true
 
         if (playerChoice && playerShips) {
+          console.log(playerChoice)
           const playerShipStart = index
           randomIndex = playerShipStart //Sets index for blockade
 
@@ -284,11 +286,29 @@ document.addEventListener('DOMContentLoaded', () => {
           const playerRowIndex = Math.floor(index / width)
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
-            playerCanPlaceShip = false
+            console.log('off board horizontal')
+            placeShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
+
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
-            playerCanPlaceShip = false
+            console.log('off board vertical')
+            placeShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
+
+          } else {
+            placeShip = true
+          }
+
+          if (placeShip){
+
+            for (let i = 0; i < shipLength; i++) {
+              const playerNextIndex = randomIndex + i * orientation
+              console.log(placeShip)
+              console.log(playerSquares[playerNextIndex]
+                , 'next Index')
+              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+              errorMessage.innerText = 'You can\'t overlap ships'
+            }
           }
           playerPlaceShips()
         }
@@ -297,13 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerPlaceShips(){
-    placeShip = true
-
-    for (let i = 0; i < shipLength; i++) {
-      const playerNextIndex = randomIndex + i * orientation
-      if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
-      errorMessage.innerText = 'You can\'t overlap ships'
-    }
 
     // Passes tests and can place the ship
     const playerShip = []
@@ -555,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addEventListeners() {
-    // HIT DETECTION
+    // CHECKS WHETHER THE PLAYER HAS HIT
     squares.forEach(element => {
       element.addEventListener('click', checkIfHit)
     })
