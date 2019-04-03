@@ -204,6 +204,7 @@ main {
 .start-button {
   background-color: #007a14;
   margin-top: 30px;
+  font-size: 30px;
 }
 
 .ship-button {
