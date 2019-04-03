@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
   function createGrid() {
 
-    //Computer grid
     for (let i = 0; i < (width * width); i++) {
       const square = document.createElement('div')
       document.querySelector('.grid').appendChild(square)
@@ -62,9 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares.push(square)
     }
 
+    const startBtn = document.querySelector('.start-button')
+    const modalWrapper = document.querySelector('.modal-wrapper')
+
     computerPlaceShips()
     addEventListeners()
-    console.log(orientation)
   }
 
 
@@ -171,24 +172,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function isShipDestroyed(){
 
-
     if (playerTurn) {
       //Checks if player has destroyed a ship
       const hitArray = computerShipsObject[squares[clickedIndex].dataset.computership]
-      console.log(computerShipsObject)
-
       let count = 0
 
       for (let i = 0; i < hitArray.length; i++){
         const hitCheck = squares[hitArray[i]]
-        console.log(hitCheck, 'Player Checked Array')
         if (hitCheck.classList.contains('hit')) {
           count++
-          console.log(count, 'Player Count')
         }
         if (count === hitArray.length){
           computerShipsLeft--
-          console.log(computerShipsLeft, 'Computer ships left')
           computerShipsDestroyed.innerText = computerShipsLeft
         }
       }
@@ -197,20 +192,16 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       //Checks if computer has destroyed a ship
       const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
-      console.log(playerShipsObject)
 
       let count = 0
 
       for (let i = 0; i < hitArray.length; i++){
         const hitCheck = playerSquares[hitArray[i]]
-        console.log(hitCheck, 'Checked Array')
         if (hitCheck.classList.contains('hit')) {
           count++
-          console.log(count, 'Count')
         }
         if (count === hitArray.length){
           playerShipsLeft--
-          console.log(playerShipsLeft, 'Player ships left')
           yourShipsDestroyed.innerText = playerShipsLeft
         }
       }
@@ -568,6 +559,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addEventListeners() {
+
+    startBtn.addEventListener('click', () => {
+      modalWrapper.setAttribute('style', 'display: none')
+    })
+
     // CHECKS WHETHER THE PLAYER HAS HIT
     squares.forEach(element => {
       element.addEventListener('click', checkIfHit)
@@ -577,9 +573,10 @@ document.addEventListener('DOMContentLoaded', () => {
     shipChoiceButtons.forEach(element => {
       element.addEventListener('click', playerShipChoice)
     })
+
+    resetBtn.addEventListener('click', resetGame)
   }
 
-  resetBtn.addEventListener('click', resetGame)
 
   createGrid()
 

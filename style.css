@@ -5,13 +5,13 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
-  /* background-image: url('images/battleship-background.jpg');
-  background-size: cover; */
+  background-image: url('images/battleship-background.jpg');
+  background-size: cover;
 }
 
 p {
   margin: 5px;
-  /* color: #ffffff; */
+  color: #ffffff;
 }
 
 h1 {
@@ -123,15 +123,14 @@ main {
 }
 
 .block {
-  /* background-color: rgba(255,255,255,0.1); */
-  background-color: grey;
+  background-color: rgba(255,255,255,0.1);
 }
 
 [class*='square'] {
   width: 10%;
   height: 10%;
   border: 1px solid rgba(189,189,189,0.5);
-  /* background-color: rgba(255,255,255,0.01); */
+  background-color: rgba(255,255,255,0.01);
 }
 
 .ship {
@@ -139,8 +138,7 @@ main {
 }
 
 .square.ship {
-  /* background-color: rgba(255,255,255,0.01); */
-  background-color: #000000;
+  background-color: rgba(255,255,255,0.01);
 
 }
 
@@ -176,9 +174,10 @@ main {
   font-size: 18px;
   color: #ededed;
   background-color: #e50202;
-  border-radius: 4px;
+  border-radius: 8px;
   text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
 }
 
 .reset-button {
@@ -197,4 +196,34 @@ main {
   background-color: #ad0505;
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
   transform: translateY(4px);
+}
+
+/* MODAL=========== */
+
+.modal-wrapper {
+  background-color: rgba(255,255,255,0.8);
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+
+.modal {
+  width: 900px;
+  height: 350px;
+  border: 2px solid black;
+  background-color: #ffffff;
+  margin: auto;
+  border-radius: 4px;
+  padding: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.instruction-text {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  padding-right: 40px;
 }
