@@ -18,6 +18,9 @@
     <div class="main-wrapper">
 
       <div class="side-bar">
+        <p>
+          Ships left to place: <span id="ships-to-place"></span>
+        </p>
         <p>Choose your ship direction</p>
         <div class="button-wrapper">
         <div class="player-choice-button" id="placeHorizontal">
@@ -27,13 +30,19 @@
         <div class="player-choice-button" id="placeVertical">
           Vertical
         </div>
-        <div class="reset-button" id="placeVertical">
+        <div class="ship-select">
+          <div class="ship-button" data-shipsize='5'>
+            Aircraft carrier
+          </div>
+          <div class="ship-button" data-shipsize='3'>
+            Cruiser
+          </div>
+
+        </div>
+        <div class="reset-button">
           RESET GAME
         </div>
         </div>
-        <p>
-          Ships left to place: <span id="ships-to-place"></span>
-        </p>
       </div>
 
   <div class="central-wrapper">
@@ -88,12 +97,13 @@
       <div class="instructions-column">
 
         <div class="instructions-text">
+          <h3>How to play</h3>
           <ul>
-            <li>Battleships is a game of skill against the computer</li>
-            <li>Place your ships on the grid by chooing either horizontal or vertical</li>
+            <li>Battleships is a game of skill against the computer.</li>
+            <li>Place your ships on the grid by choosing either horizontal or vertical.</li>
             <li>Once you have placed all of your ships, click on a square on the computer grid to start playing.</li>
             <li>The computer will automatically guess each time.</li>
-            <li>The first to destroy all of the opponents ships is the winner</li>
+            <li>The first to destroy all of the opponents ships is the winner.</li>
           </ul>
 
         </div>

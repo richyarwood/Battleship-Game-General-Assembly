@@ -122,10 +122,6 @@ main {
   background-color: rgba(255,255,255,0.1);
 }
 
-.block {
-  background-color: rgba(255,255,255,0.1);
-}
-
 [class*='square'] {
   width: 10%;
   height: 10%;
@@ -133,12 +129,19 @@ main {
   background-color: rgba(255,255,255,0.01);
 }
 
+.block {
+  /* background-color: rgba(255,255,255,0.1); */
+  background-color: #bdbdbd;
+}
+
+
 .ship {
   background-color: #000000;
 }
 
 .square.ship {
-  background-color: rgba(255,255,255,0.01);
+  /* background-color: rgba(255,255,255,0.01); */
+  background-color: #000000;
 
 }
 
@@ -191,6 +194,26 @@ main {
   transform: translateY(4px);
 }
 
+.start-button {
+  background-color: #007a14;
+  margin-top: 30px;
+}
+
+.ship-button {
+  background-color: #0734d8;
+}
+
+.ship-button:active {
+  background-color: #00229c;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+  transform: translateY(4px);
+}
+
+.ship-select {
+  width: 100%;
+  padding-top: 30px;
+}
+
 
 .selected {
   background-color: #ad0505;
@@ -205,7 +228,7 @@ main {
   height: 100vh;
   width: 100vw;
   position: absolute;
-  display: flex;
+  display: none;
   justify-content: center;
 }
 

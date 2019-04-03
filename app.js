@@ -2,32 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const width = 10
-  let shipLength = 3
+  let shipLength = 0
   let numShips = 6
   let playerShips = 6
   let playerShipsLeft = 6
   let computerShipsLeft = 6
 
-  let block
+  let randomIndex, clickedIndex, orientation, placeShip, playerChoice = false, playerTurn = true, hitGuessExists = false, block
 
-  let randomIndex
-  let clickedIndex
-  let orientation
-  let placeShip
   const playerShipsObject = {}
   const computerShipsObject = {}
 
   let nextHitGuess
-  let lastHit = null // Sets where next guess should be
-  let nextHitMoves = [-1, -width, 1, width]
+  let lastHit = null, nextHitMoves = [-1, -width, 1, width]
 
   const shipChoiceButtons = document.querySelectorAll('.player-choice-button')
   const horizontalBtn = document.getElementById('placeHorizontal')
   const verticalBtn = document.getElementById('placeVertical')
-
-  let playerChoice = false
-  let playerTurn = true
-  let hitGuessExists = false
+  const shipTypeBtn = document.querySelectorAll('.ship-button')
 
   const playerSquares = []
   const squares = []
@@ -96,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
   function resetGame() {
     playerTurn = true
     placeShip = false
@@ -108,37 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
     modalWrapper.setAttribute('style', 'display:none')
 
     const playerSquares = document.querySelectorAll('.player-square')
-    const computerSquares = document.querySelectorAll('.square')
+    const squares = document.querySelectorAll('.square')
 
     playerSquares.forEach(element => {
       element.className = 'player-square'
     })
 
-    computerSquares.forEach(element => {
+    squares.forEach(element => {
       element.className = 'square'
     })
 
     computerPlaceShips()
   }
-
-// FUNCTION DISCUSSED WITH DEX USING FILTER NOT SPLICE
-  // function educatedGuessFilterVersion(index) {
-  //   let nextHitMoves = [-1, -10, 10, 1]
-  //
-  //   guess = nextHitMoves.filter(guess => !playerSquares[index + guess].classList.contains('hit') etc)
-  //
-  //   nextSquare = playerSquares[index + guess[Math.floor(Math.random() * nextHitMoves.length)]]
-  //
-  //   randomIndex = nextSquare
-  //
-  //   markAsHitOrMiss()
-  // }
-
-
-  //FUNCTION FOR COMPUTER TO MAKE AN EDUCATED GUESS
-  // This function is called if hitGuessExists is true
-
-  // If nextMoveRandom array.length > 0
 
   function computerEducatedGuess() {
     console.log(nextHitMoves, 'start')
@@ -170,9 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset hitGuessExists to false once all squares used up
     randomIndex = lastHit + nextHitMoves[nextMoveRandom]
     markAsHitOrMiss()
-
   }
-
 
   // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
@@ -197,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
       playerTurn = true
     }
   }
-
 
   function isShipDestroyed() {
 
@@ -242,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-
   //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
 
@@ -256,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
   }
-
 
   //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
@@ -303,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
         placeShip = true
 
         if (playerChoice && playerShips) {
-          console.log(playerChoice)
           const playerShipStart = index
           randomIndex = playerShipStart //Sets index for blockade
 
@@ -378,7 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
   //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
 
-    while (numShips > 0) {
+    const shipArray = [5,4,3,2,2,1,1]
+
+    while (shipArray.length > 0) {
+
+      shipLength = shipArray[0]
+      console.log(shipLength)
 
       let canPlaceShip = true
 
@@ -408,10 +379,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // creates ships
-
       for (let i = 0; i < shipLength; i++) {
         const nextIndex = randomIndex + i * orientation
         if (squares[nextIndex].classList.contains('ship') || squares[nextIndex].classList.contains('block')) canPlaceShip = false
+      }
+
+      if (canPlaceShip) {
+        shipArray.shift()
+        console.log(shipArray, 'shifted')
       }
 
       const computerShip = []
@@ -421,17 +396,19 @@ document.addEventListener('DOMContentLoaded', () => {
           const nextIndex = randomIndex + i * orientation
           shipSquare = squares[nextIndex]
           shipSquare.classList.add('ship')
-          shipSquare.setAttribute('data-computership', numShips)
+          shipSquare.setAttribute('data-computership', shipLength)
           computerShip.push(nextIndex)
         }
 
         computerShipsObject[shipSquare.dataset.computership] = computerShip
 
         if (randomDirection === true) {
+          console.log(shipLength)
           blockAroundHorizontalShip()
-        } else
+        } else {
+          console.log(shipLength)
           blockAroundVerticalShip()
-        numShips--
+        }
       }
     }
   }
@@ -615,8 +592,15 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('game over clicked')
       resetGame()
     })
-  }
 
+    shipTypeBtn.forEach(element => {
+      element.addEventListener('click', () => {
+        shipLength = element.dataset.shipsize
+        console.log(shipLength)
+      })
+    })
+
+  }
 
   createGrid()
 
