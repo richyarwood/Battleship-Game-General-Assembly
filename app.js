@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const width = 10
   let shipLength = 0
-  let numShips = 6
-  let playerShips = 6
-  let playerShipsLeft = 6
-  let computerShipsLeft = 6
+  let numShips = 7
+  let playerShips = 7
+  let playerShipsLeft = 7
+  let computerShipsLeft = 7
 
   let playerShipArray = [5,4,3,2,2,1,1]
 
@@ -93,11 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetGame() {
     playerTurn = true
     placeShip = false
-    playerShips = 6
-    numShips = 6
+    playerShips = 7
+    numShips = 7
     shipsToPlace.innerText = playerShips
-    yourShipsDestroyed.innerText = 6
-    computerShipsDestroyed.innerText = 6
+    yourShipsDestroyed.innerText = 7
+    computerShipsDestroyed.innerText = 7
     modalWrapper.setAttribute('style', 'display:none')
 
     const playerSquares = document.querySelectorAll('.player-square')
@@ -243,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerTurn = false
       }
     } else {
+      errorMessage.classList.add('message-in')
       errorMessage.innerText = 'You need to place your ships first'
     }
     computerGuess()
@@ -279,12 +280,10 @@ document.addEventListener('DOMContentLoaded', () => {
           const playerRowIndex = Math.floor(index / width)
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
-            console.log('off board horizontal')
             placeShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
 
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
-            console.log('off board vertical')
             placeShip = false
             errorMessage.innerText = 'Try again. Ship will go off board'
 
@@ -295,9 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (placeShip){
             for (let i = 0; i < shipLength; i++) {
               const playerNextIndex = randomIndex + i * orientation
-              console.log(placeShip)
-              console.log(playerSquares[playerNextIndex]
-                , 'next Index')
               if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
               errorMessage.innerText = 'You can\'t overlap ships'
             }
@@ -308,16 +304,18 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  function playerPlaceShips(){
+  function playerPlaceShips() {
+
     console.log(shipLength, 'Ship length in place')
 
     console.log(playerShipArray)
 
-    const playerChoiceIndex = playerShipArray.indexOf(shipLength)
+    let playerChoiceIndex = playerShipArray.indexOf(shipLength)
+    console.log(playerChoiceIndex, 'Playerchoice Index')
     const playerShip = []
     let playerShipSquare
 
-    if (playerShipArray[playerChoiceIndex] && placeShip) {
+    if (playerShipArray[playerChoiceIndex] > 0 && placeShip) {
 
       for (let i = 0; i < shipLength; i++) {
         errorMessage.innerText = 'Place your ships'
@@ -328,8 +326,10 @@ document.addEventListener('DOMContentLoaded', () => {
         playerShip.push(playerNextIndex)
       }
       playerShipsObject[playerShipSquare.dataset.playership] = playerShip
-      const playerChoiceIndex = playerShipArray.indexOf(shipLength)
+
+      playerChoiceIndex = playerShipArray.indexOf(shipLength)
       playerShipArray.splice(playerChoiceIndex, 1)
+      console.log('spliced')
 
       playerShips--
 
@@ -340,7 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       //Return an error because ship not available
     } else {
-      errorMessage.innerText = 'You`ve run out of that type. Place another'
+      errorMessage.innerText = 'You\'ve run out. Place another'
+      playerChoiceIndex = 0
     }
     if (playerShips === 0) {
       errorMessage.innerText = 'Start playing'
@@ -609,6 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shipTypeBtn.forEach(element => {
       element.addEventListener('click', () => {
+        errorMessage.innerText = 'Place your ships'
         shipLength = parseInt(element.dataset.shipsize)
         console.log(shipLength)
         playerAddShips()
