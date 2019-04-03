@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startBtn = document.querySelector('.start-button')
   const anotherGameBtn = document.querySelector('.play-again-button')
   const modalWrapper = document.querySelector('.modal-wrapper')
+  const gameOverWrapper = document.querySelector('.gameover')
 
   const shipsToPlace = document.getElementById('ships-to-place')
   const yourShipsDestroyed = document.getElementById('ships-destroyed')
@@ -78,13 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const gameOverText = document.querySelector('.gameover-text')
 
-    const gameOver = document.querySelector('.gameover')
-    gameOver.setAttribute('style', 'display: flex')
+    gameOverWrapper.setAttribute('style', 'display: flex')
 
     const startImage = document.getElementById('start-image')
     startImage.setAttribute('style', 'display: none')
 
-    startBtn.innerText = 'Want another game?'
+    startBtn.setAttribute('style', 'display:none')
 
     if (playerShipsLeft === 0){
       console.log(yourShipsDestroyed)
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shipsToPlace.innerText = playerShips
     yourShipsDestroyed.innerText = 6
     computerShipsDestroyed.innerText = 6
+    modalWrapper.setAttribute('style', 'display:none')
 
     const playerSquares = document.querySelectorAll('.player-square')
     const computerSquares = document.querySelectorAll('.square')
@@ -610,7 +611,8 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', resetGame)
 
     anotherGameBtn.addEventListener('click', () => {
-      gameOver.setAttribute('style', 'display:none')
+      gameOverWrapper.setAttribute('style', 'display:none')
+      console.log('game over clicked')
       resetGame()
     })
   }

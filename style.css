@@ -224,7 +224,7 @@ main {
 
 
 .instructions-column {
-  display: none;
+  display: flex;
   flex-direction: column;
   padding-right: 40px;
   justify-content: space-evenly;
@@ -235,13 +235,12 @@ main {
 }
 
 img {
-  display: none;
   border: 2px solid #000000;
   border-radius: 4px;
 }
 
 .gameover {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: space-evenly;
 }
