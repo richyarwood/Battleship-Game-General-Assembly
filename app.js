@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerSquares = []
   const squares = []
 
+  const explosion = new Audio('sounds/explosion.wav')
+  const splash = new Audio('sounds/splash.wav')
+  const startSound = new Audio('sounds/start.mp3')
+
   const resetBtn = document.querySelector('.reset-button')
   const startBtn = document.querySelector('.start-button')
   const anotherGameBtn = document.querySelector('.play-again-button')
@@ -36,10 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const yourShipsDestroyed = document.getElementById('ships-destroyed')
   const computerShipsDestroyed = document.getElementById('comp-destroyed')
   const errorMessage = document.querySelector('.error-message')
-
-  shipsToPlace.innerText = playerShips
-  yourShipsDestroyed.innerText = 6
-  computerShipsDestroyed.innerText = 6
 
 
   //CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
       square.classList.add('player-square')
       playerSquares.push(square)
     }
+
+    shipsToPlace.innerText = playerShips
 
     computerPlaceShips()
     addEventListeners()
@@ -153,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
 
+      explosion.play()
+
       isShipDestroyed()
 
       hitGuessExists = true
@@ -164,6 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else { // Guess has missed
       playerSquares[randomIndex].classList.add('miss')
       playerSquares[randomIndex].classList.remove('block')
+
+      splash.play()
 
       console.log(randomIndex, 'miss')
       playerTurn = true
@@ -233,12 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (this.classList.contains('ship')) {
         this.classList.add('hit')
+        explosion.play()
         this.removeEventListener('click', checkIfHit)
         clickedIndex = squares.indexOf(this)
-        console.log(squares.indexOf(this), 'Player click')
         isShipDestroyed()
       } else {
         this.classList.add('miss')
+        splash.play()
         this.removeEventListener('click', checkIfHit)
         playerTurn = false
       }
@@ -246,7 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
       errorMessage.classList.add('message-in')
       errorMessage.innerText = 'You need to place your ships first'
     }
-    computerGuess()
+
+    setTimeout(computerGuess, 2500)
   }
 
   // SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
@@ -575,6 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startBtn.addEventListener('click', () => {
       modalWrapper.setAttribute('style', 'display: none')
+      startSound.play()
     })
 
     // CHECKS WHETHER THE PLAYER HAS HIT
