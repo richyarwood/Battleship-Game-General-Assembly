@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerShipsLeft = 6
   let computerShipsLeft = 6
 
+  let playerShipArray = [5,4,3,2,2,1,1]
+
   let randomIndex, clickedIndex, orientation, placeShip, playerChoice = false, playerTurn = true, hitGuessExists = false, block
 
   const playerShipsObject = {}
@@ -291,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           if (placeShip){
-
             for (let i = 0; i < shipLength; i++) {
               const playerNextIndex = randomIndex + i * orientation
               console.log(placeShip)
@@ -308,11 +309,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerPlaceShips(){
+    console.log(shipLength, 'Ship length in place')
 
-    // Passes tests and can place the ship
+    console.log(playerShipArray)
+
+    const playerChoiceIndex = playerShipArray.indexOf(shipLength)
     const playerShip = []
     let playerShipSquare
-    if (placeShip) {
+
+    if (playerShipArray[playerChoiceIndex] && placeShip) {
+
       for (let i = 0; i < shipLength; i++) {
         errorMessage.innerText = 'Place your ships'
         const playerNextIndex = randomIndex + i * orientation
@@ -321,35 +327,33 @@ document.addEventListener('DOMContentLoaded', () => {
         playerShipSquare.setAttribute('data-playership', playerShips)
         playerShip.push(playerNextIndex)
       }
-
       playerShipsObject[playerShipSquare.dataset.playership] = playerShip
-      console.log(playerShipsObject)
+      const playerChoiceIndex = playerShipArray.indexOf(shipLength)
+      playerShipArray.splice(playerChoiceIndex, 1)
+
+      playerShips--
 
       if (orientation === 1){
         blockAroundHorizontalShip()
-      } else if (orientation === 10){
+      } else {
         blockAroundVerticalShip()
       }
-      playerShips--
-      if (playerShips === 0){
-        errorMessage.innerText = 'Start playing'
-      }
+      //Return an error because ship not available
+    } else {
+      errorMessage.innerText = 'You`ve run out of that type. Place another'
     }
-    playerChoice = false
-    horizontalBtn.classList.remove('selected')
-    verticalBtn.classList.remove('selected')
+    if (playerShips === 0) {
+      errorMessage.innerText = 'Start playing'
+    }
     shipsToPlace.innerText = playerShips
   }
 
   //GENERATES THE COMPUTER SHIPS ====================
   function computerPlaceShips() {
-
     const shipArray = [5,4,3,2,2,1,1]
 
     while (shipArray.length > 0) {
-
       shipLength = shipArray[0]
-      console.log(shipLength)
 
       let canPlaceShip = true
 
@@ -386,7 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (canPlaceShip) {
         shipArray.shift()
-        console.log(shipArray, 'shifted')
       }
 
       const computerShip = []
@@ -399,14 +402,11 @@ document.addEventListener('DOMContentLoaded', () => {
           shipSquare.setAttribute('data-computership', shipLength)
           computerShip.push(nextIndex)
         }
-
         computerShipsObject[shipSquare.dataset.computership] = computerShip
 
         if (randomDirection === true) {
-          console.log(shipLength)
           blockAroundHorizontalShip()
         } else {
-          console.log(shipLength)
           blockAroundVerticalShip()
         }
       }
@@ -547,6 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lengthOfBlockade--
     }
 
+
     block = squares
     if (placeShip) {
       block = playerSquares
@@ -582,7 +583,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //WHERE A PLAYER PLACES A SHIP
     shipChoiceButtons.forEach(element => {
-      element.addEventListener('click', playerShipChoice)
+      element.addEventListener('click', (e) => {
+        if (e.target.id === 'placeHorizontal' && playerShips) {
+          e.target.classList.toggle('selected')
+          verticalBtn.classList.remove('selected')
+          playerChoice = true
+          orientation = 1
+
+        } else if (playerShips) {
+          e.target.classList.toggle('selected')
+          horizontalBtn.classList.remove('selected')
+          playerChoice = true
+          orientation = 10
+        }
+      })
     })
 
     resetBtn.addEventListener('click', resetGame)
@@ -595,8 +609,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shipTypeBtn.forEach(element => {
       element.addEventListener('click', () => {
-        shipLength = element.dataset.shipsize
+        shipLength = parseInt(element.dataset.shipsize)
         console.log(shipLength)
+        playerAddShips()
       })
     })
 
