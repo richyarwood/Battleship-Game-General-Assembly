@@ -74,6 +74,7 @@ function createGrid() {
   computerPlaceShips()
   addEventListeners()
 }
+
 //GAMEOVER FUNCTION==============================
 function gameOver() {
   modalWrapper.setAttribute('style', 'display:flex')
