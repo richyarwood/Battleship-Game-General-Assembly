@@ -10,6 +10,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let playerShipArray = [5,4,3,2,2,1,1]
 
+
+  const masterShipsArray = [{
+    name: 'carrier',
+    size: 5
+  }, {
+    name: 'battleship',
+    size: 4
+  }, {
+    name: 'cruiser',
+    size: 3
+  }, {
+    name: 'destroyer1',
+    size: 2
+  }, {
+    name: 'destroyer2',
+    size: 2
+  }, {
+    name: 'submarine1',
+    size: 1
+  }, {
+    name: 'submarine2',
+    size: 1
+  }]
+
+  let ships = masterShipsArray.slice()
+
+  let shipType
+
   let randomIndex, clickedIndex, orientation, placeShip, playerChoice = false, playerTurn = true, hitGuessExists = false, block
 
   const playerShipsObject = {}
@@ -102,6 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
     computerShipsDestroyed.innerText = 7
     modalWrapper.setAttribute('style', 'display:none')
 
+    shipTypeBtn.forEach(element => {
+      element.classList.remove('ship-button-selected')
+      element.classList.remove('hidden')
+    })
+
     const playerSquares = document.querySelectorAll('.player-square')
     const squares = document.querySelectorAll('.square')
 
@@ -155,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares[randomIndex].classList.add('hit')
       playerSquares[randomIndex].classList.remove('ship')
 
-      explosion.play()
+      // explosion.play()
 
       isShipDestroyed()
 
@@ -169,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playerSquares[randomIndex].classList.add('miss')
       playerSquares[randomIndex].classList.remove('block')
 
-      splash.play()
+      // splash.play()
 
       console.log(randomIndex, 'miss')
       playerTurn = true
@@ -236,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
     if (playerShips === 0 && playerTurn) {
+      console.log(playerShips)
 
       if (this.classList.contains('ship')) {
         this.classList.add('hit')
@@ -312,14 +346,20 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
+  // PLACES THE PLAYERS SHIP ON THE GRID====================
   function playerPlaceShips() {
 
-    console.log(shipLength, 'Ship length in place')
+    ships = masterShipsArray.slice()
+    console.log(ships)
 
-    console.log(playerShipArray)
+    console.log(shipType, 'Type')
 
+    const selectedShip = ships.find(ship => {
+      return ship.name === shipType
+    })
+
+    shipLength = selectedShip.size
     let playerChoiceIndex = playerShipArray.indexOf(shipLength)
-    console.log(playerChoiceIndex, 'Playerchoice Index')
     const playerShip = []
     let playerShipSquare
 
@@ -339,7 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
       playerShipArray.splice(playerChoiceIndex, 1)
       console.log('spliced')
 
+
       playerShips--
+      const buttonDisabled = document.getElementById(shipType)
+      buttonDisabled.classList.add('hidden')
 
       if (orientation === 1){
         blockAroundHorizontalShip()
@@ -349,20 +392,22 @@ document.addEventListener('DOMContentLoaded', () => {
       //Return an error because ship not available
     } else {
       errorMessage.innerText = 'You\'ve run out. Place another'
-      playerChoiceIndex = 0
     }
     if (playerShips === 0) {
+      console.log('start playing')
       errorMessage.innerText = 'Start playing'
     }
     shipsToPlace.innerText = playerShips
   }
 
-  //GENERATES THE COMPUTER SHIPS ====================
+  //GENERATES THE COMPUTER SHIPS ===========================
   function computerPlaceShips() {
-    const shipArray = [5,4,3,2,2,1,1]
 
-    while (shipArray.length > 0) {
-      shipLength = shipArray[0]
+    ships = masterShipsArray.slice()
+
+    while (ships.length > 0) {
+      const ship = ships[0]
+      shipLength = ship.size
 
       let canPlaceShip = true
 
@@ -398,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (canPlaceShip) {
-        shipArray.shift()
+        ships.shift()
       }
 
       const computerShip = []
@@ -408,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const nextIndex = randomIndex + i * orientation
           shipSquare = squares[nextIndex]
           shipSquare.classList.add('ship')
-          shipSquare.setAttribute('data-computership', shipLength)
+          shipSquare.setAttribute('data-computership', ship.name)
           computerShip.push(nextIndex)
         }
         computerShipsObject[shipSquare.dataset.computership] = computerShip
@@ -619,9 +664,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shipTypeBtn.forEach(element => {
       element.addEventListener('click', () => {
-        errorMessage.innerText = 'Place your ships'
-        shipLength = parseInt(element.dataset.shipsize)
-        console.log(shipLength)
+        if (!element.classList.contains('hidden'))
+          element.classList.toggle('ship-button-selected')
+        shipType = element.id
         playerAddShips()
       })
     })

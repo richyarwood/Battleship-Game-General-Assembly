@@ -172,18 +172,18 @@ main {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  padding: 10px;
   width: 250px;
 }
 
 [class*='-button'] {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   margin-bottom: 10px;
   text-transform: uppercase;
   border: 1px solid #ffffff;
-  font-size: 14px;
+  font-size: 12px;
   color: #ededed;
   background-color: #e50202;
   border-radius: 8px;
@@ -194,7 +194,7 @@ main {
 
 .reset-button {
   background-color: #007a14;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .reset-button:active {
@@ -213,15 +213,21 @@ main {
   background-color: #0734d8;
 }
 
-.ship-button:active {
+.ship-button-selected {
   background-color: #00229c;
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
   transform: translateY(4px);
 }
 
+.ship-button-selected.hidden {
+  background-color: #5a5a5a;
+  color: #2f2f2f;
+  cursor: default;
+}
+
 .ship-select {
   width: 100%;
-  padding-top: 15px;
+  padding-top: 5px;
 }
 
 
@@ -238,7 +244,7 @@ main {
   height: 100vh;
   width: 100vw;
   position: absolute;
-  display: flex;
+  display: none;
   justify-content: center;
 }
 
