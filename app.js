@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const explosion = new Audio('sounds/explosion.wav')
   const splash = new Audio('sounds/splash.wav')
   const startSound = new Audio('sounds/start.mp3')
+  const firing = new Audio('sounds/firing.wav')
 
   const resetBtn = document.querySelector('.reset-button')
   const startBtn = document.querySelector('.start-button')
@@ -146,6 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
       element.className = 'square'
     })
 
+    ships = masterShipsArray
+    console.log(ships)
+
     computerPlaceShips()
   }
 
@@ -184,29 +188,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
   function markAsHitOrMiss(){
 
-    if (playerSquares[randomIndex].classList.contains('ship')) {
-      playerSquares[randomIndex].classList.add('hit')
-      playerSquares[randomIndex].classList.remove('ship')
+    firing.play()
 
-      // explosion.play()
+    setTimeout(() => {
+      if (playerSquares[randomIndex].classList.contains('ship')) {
+        playerSquares[randomIndex].classList.add('hit')
+        playerSquares[randomIndex].classList.remove('ship')
 
-      isShipDestroyed()
+        explosion.play()
 
-      hitGuessExists = true
-      lastHit = randomIndex
-      console.log(randomIndex, 'hit')
+        isShipDestroyed()
 
-      playerTurn = true
+        hitGuessExists = true
+        lastHit = randomIndex
+        console.log(randomIndex, 'hit')
 
-    } else { // Guess has missed
-      playerSquares[randomIndex].classList.add('miss')
-      playerSquares[randomIndex].classList.remove('block')
+        playerTurn = true
 
-      // splash.play()
+      } else { // Guess has missed
+        playerSquares[randomIndex].classList.add('miss')
+        playerSquares[randomIndex].classList.remove('block')
 
-      console.log(randomIndex, 'miss')
-      playerTurn = true
-    }
+        splash.play()
+
+        console.log(randomIndex, 'miss')
+        playerTurn = true
+      }
+    }, 1500)
+
   }
 
   function isShipDestroyed() {
@@ -255,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
   function computerGuess() {
 
-    if(!playerTurn){
+    if(!playerTurn && playerShipsLeft > 0){
       randomIndex = Math.floor(Math.random() * playerSquares.length)
 
       while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
@@ -268,45 +277,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
-    if (playerShips === 0 && playerTurn) {
-      console.log(playerShips)
+    firing.play()
 
-      if (this.classList.contains('ship')) {
-        this.classList.add('hit')
-        explosion.play()
-        this.removeEventListener('click', checkIfHit)
-        clickedIndex = squares.indexOf(this)
-        isShipDestroyed()
+    setTimeout(() => {
+      if (playerShips === 0 && playerTurn) {
+        console.log(playerShips)
+
+        if (this.classList.contains('ship')) {
+          this.classList.add('hit')
+          explosion.play()
+          this.removeEventListener('click', checkIfHit)
+          clickedIndex = squares.indexOf(this)
+          isShipDestroyed()
+        } else {
+          this.classList.add('miss')
+          splash.play()
+          this.removeEventListener('click', checkIfHit)
+          playerTurn = false
+        }
       } else {
-        this.classList.add('miss')
-        splash.play()
-        this.removeEventListener('click', checkIfHit)
-        playerTurn = false
+        errorMessage.classList.add('message-in')
+        errorMessage.innerText = 'You need to place your ships first'
       }
-    } else {
-      errorMessage.classList.add('message-in')
-      errorMessage.innerText = 'You need to place your ships first'
-    }
-
-    setTimeout(computerGuess, 2500)
+    }, 1500)
+    setTimeout(computerGuess, 3000)
   }
 
-  // SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
-  function playerShipChoice() {
-    if (this.id === 'placeHorizontal' && playerShips) {
-      this.classList.add('selected')
-      verticalBtn.classList.remove('selected')
-      playerChoice = true
-      orientation = 1
-
-    } else if (playerShips) {
-      this.classList.add('selected')
-      horizontalBtn.classList.remove('selected')
-      playerChoice = true
-      orientation = 10
-    }
-    playerAddShips()
-  }
+  // // SETS AND SWITCHES THE PLAYER CHOICE BUTTONS=============
+  // function playerShipChoice() {
+  //   if (this.id === 'placeHorizontal' && playerShips) {
+  //     this.classList.add('selected')
+  //     verticalBtn.classList.remove('selected')
+  //     playerChoice = true
+  //     orientation = 1
+  //
+  //   } else if (playerShips) {
+  //     this.classList.add('selected')
+  //     horizontalBtn.classList.remove('selected')
+  //     playerChoice = true
+  //     orientation = 10
+  //   }
+  //   playerAddShips()
+  // }
 
   function playerAddShips() {
     playerSquares.forEach((element, index) => {
@@ -662,6 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resetGame()
     })
 
+    // ALLOWS A PLAYER TO CHOOSE A SHIP SIZE
     shipTypeBtn.forEach(element => {
       element.addEventListener('click', () => {
         if (!element.classList.contains('hidden'))
