@@ -147,9 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
       element.className = 'square'
     })
 
-    ships = masterShipsArray
-    console.log(ships)
-
     computerPlaceShips()
   }
 
@@ -277,7 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
   function checkIfHit() {
-    firing.play()
+    if (playerShips === 0){
+      firing.play()
+    } else {
+      errorMessage.classList.add('message-in')
+      errorMessage.innerText = 'You need to place your ships first'
+    }
 
     setTimeout(() => {
       if (playerShips === 0 && playerTurn) {
@@ -295,9 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
           this.removeEventListener('click', checkIfHit)
           playerTurn = false
         }
-      } else {
-        errorMessage.classList.add('message-in')
-        errorMessage.innerText = 'You need to place your ships first'
       }
     }, 1500)
     setTimeout(computerGuess, 3000)
@@ -320,9 +319,23 @@ document.addEventListener('DOMContentLoaded', () => {
   //   playerAddShips()
   // }
 
+  // CHECKS IF THE PLAYER CAN PLACE A SHIP
   function playerAddShips() {
     playerSquares.forEach((element, index) => {
       element.addEventListener('click', () => {
+
+        ships = masterShipsArray.slice()
+        console.log(ships)
+
+        console.log(shipType, 'Type')
+
+        const selectedShip = ships.find(ship => {
+          return ship.name === shipType
+        })
+
+        shipLength = selectedShip.size
+
+        console.log(shipLength, 'Ship Length')
 
         placeShip = true
 
@@ -335,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if ((width - playerColumnIndex) < shipLength && orientation === 1) {
             placeShip = false
+            console.log('go over')
             errorMessage.innerText = 'Try again. Ship will go off board'
 
           } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
@@ -343,12 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
           } else {
             placeShip = true
+            errorMessage.innerText = 'Place your ship'
           }
 
           if (placeShip){
             for (let i = 0; i < shipLength; i++) {
               const playerNextIndex = randomIndex + i * orientation
               if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')) placeShip = false
+              console.log('overlap')
               errorMessage.innerText = 'You can\'t overlap ships'
             }
           }
@@ -361,17 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // PLACES THE PLAYERS SHIP ON THE GRID====================
   function playerPlaceShips() {
 
-    ships = masterShipsArray.slice()
-    console.log(ships)
-
-    console.log(shipType, 'Type')
-
-    const selectedShip = ships.find(ship => {
-      return ship.name === shipType
-    })
-
-    shipLength = selectedShip.size
     let playerChoiceIndex = playerShipArray.indexOf(shipLength)
+
     const playerShip = []
     let playerShipSquare
 
@@ -401,9 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         blockAroundVerticalShip()
       }
-      //Return an error because ship not available
-    } else {
-      errorMessage.innerText = 'You\'ve run out. Place another'
     }
     if (playerShips === 0) {
       console.log('start playing')
@@ -416,6 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function computerPlaceShips() {
 
     ships = masterShipsArray.slice()
+    console.log(ships)
 
     while (ships.length > 0) {
       const ship = ships[0]
