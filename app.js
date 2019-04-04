@@ -31,7 +31,7 @@ let lastHit = null, nextHitMoves = [-1, -width, 1, width], shipLength = 0, playe
 
 let  shipChoiceButtons, horizontalBtn, verticalBtn, shipTypeBtn, resetBtn, startBtn, anotherGameBtn, modalWrapper, gameOverWrapper, shipsToPlace, yourShipsDestroyed, computerShipsDestroyed, errorMessage
 
-
+//INITIALISE AND LOAD DOM DEPENDENT VARIABLES ========================
 function initialiseGame() {
   modalWrapper = document.querySelector('.modal-wrapper')
   gameOverWrapper = document.querySelector('.gameover')
@@ -74,7 +74,7 @@ function createGrid() {
   computerPlaceShips()
   addEventListeners()
 }
-
+//GAMEOVER FUNCTION==============================
 function gameOver() {
   modalWrapper.setAttribute('style', 'display:flex')
   const instructionText = document.querySelector('.instructions-text')
@@ -93,6 +93,7 @@ function gameOver() {
   }
 }
 
+//GAME RESET FUNCTION ===================================
 function resetGame() {
   playerTurn = true
   placeShip = false
