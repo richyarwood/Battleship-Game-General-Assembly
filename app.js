@@ -52,22 +52,21 @@ function initialiseGame() {
   createGrid()
 }
 
-
-//CREATES THE GRIDS AND CALLS THE FUNCTION TO CREATE COMPUTER SHIPS====
+//CREATES THE GRIDS AND CALLS THE FUNCTIONS TO CREATE COMPUTER SHIPS====
 function createGrid() {
 
   for (let i = 0; i < (width * width); i++) {
-    const square = document.createElement('div')
-    document.querySelector('.grid').appendChild(square)
-    square.classList.add('square')
-    computerSquares.push(square)
+    const compGridSquare = document.createElement('div')
+    document.querySelector('.grid').appendChild(compGridSquare)
+    compGridSquare.classList.add('square')
+    computerSquares.push(compGridSquare) //Array of computer grid
   }
 
   for (let i = 0; i < (width * width); i++) {
-    const square = document.createElement('div')
-    document.querySelector('.player-grid').appendChild(square)
-    square.classList.add('player-square')
-    playerSquares.push(square)
+    const playerGridSquare = document.createElement('div')
+    document.querySelector('.player-grid').appendChild(playerGridSquare)
+    playerGridSquare.classList.add('player-square')
+    playerSquares.push(playerGridSquare) // Array of player grid
   }
 
   shipsToPlace.innerText = playerShips
@@ -107,10 +106,8 @@ function resetGame() {
     element.classList.remove('ship-button-selected')
     element.classList.remove('hidden')
   })
-
   const playerSquares = document.querySelectorAll('.player-square')
   const computerSquares = document.querySelectorAll('.square')
-
   playerSquares.forEach(element => {
     element.className = 'player-square'
   })
@@ -198,29 +195,6 @@ function computerGuess() {
   }
 }
 
-//**THIS CONTROLS A MORE EDUCATED GUESS BUT ERRORS SO IS NOT CALLED**
-function computerEducatedGuess() {
-  let nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-  let nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-
-  do {
-    nextHitMoves.splice(nextHitMoves.indexOf(nextMoveRandom), 1)
-
-    nextMoveRandom = Math.floor(Math.random() * nextHitMoves.length)
-    if (nextHitMoves.length === 0) {
-      lastHit = false
-      nextSquare = false
-      nextHitMoves = [-1, -width, 1, width]
-    } else {
-      nextSquare = playerSquares[lastHit + nextHitMoves[nextMoveRandom]]
-    }
-  } while (nextSquare && nextSquare.classList.contains('hit') || nextSquare.classList.contains('miss'))
-
-  // Reset hitGuessExists to false once all squares used up
-  randomIndex = lastHit + nextHitMoves[nextMoveRandom]
-  markAsHitOrMiss()
-}
-
 //FUNCTION TO CHECK PLAYER HIT OR A MISS=================
 function checkIfHit() {
 
@@ -233,7 +207,6 @@ function checkIfHit() {
 
   setTimeout(() => {
     if (playerShips === 0 && playerTurn) {
-
       if (this.classList.contains('ship')) {
         this.classList.add('hit')
         explosion.play()
@@ -410,7 +383,6 @@ function blockAroundVerticalShip() {
   let topBlockade = (randomIndex - width)
   let bottomBlockade = (randomIndex + (shipLength * width))
 
-
   // If vertical ship against left
   if (columnIndex === 0 && rowIndex !== 0 && rowIndex !== width - shipLength) {
     endOfBlockade = startOfBlockade
@@ -533,7 +505,6 @@ function blockAroundHorizontalShip() {
     rightBlockade = leftBlockade
     lengthOfBlockade--
   }
-
 
   block = computerSquares
   if (placeShip) {
