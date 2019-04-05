@@ -126,9 +126,11 @@ if (columnIndex === 0 && rowIndex !== 0 && rowIndex !== width - shipLength) {
   ```
 
 ### Player set up
-The player placement of ships is achieved through taking the ids of the ship type buttons ```<div class="ship-button" id="carrier" data-shipsize='5'>
-    Aircraft carrier
-  </div>``` and using ```find()``` to select the ship size from the array of ship objects.
+The player placement of ships is achieved through taking the ids of the ship type buttons, for example:
+```
+<div class="ship-button" id="carrier" data-shipsize='5'>Aircraft carrier</div>
+```
+The method ```find()``` selects the ship size from the array of ship objects.
 
 On click, the code checks whether the player could place the ship in that spot, checking for ```columnIndex``` and ```rowIndex``` and whether the ship would overlap another. If these tests are passed, the ship is placed on the player grid.
 
