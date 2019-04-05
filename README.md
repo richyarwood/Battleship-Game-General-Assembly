@@ -106,7 +106,8 @@ while ((width - columnIndex) < shipLength) {
 }
 ```
 
-**Blockade set up**
+#### Blockade set up
+
 Two functions ```blockAroundHorizontalShip()``` and ```blockAroundVerticalShip()``` generate an additional class of ```block``` around the ship which prevents overlap. These functions are repurposed when the player places ships.
 
 The challenge within this process was to take in to consideration starting indices which where on the edges or corners of the grid. In these instances the blockade needed to be customised. This was achieved through a series of conditional statements. For example:
