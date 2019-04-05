@@ -16,7 +16,7 @@
 
 The game can be found on this [GitHub repo][githubrepo] and can be played by cloning the repo and opening the `index.html` file in a browser.
 
-Alternatively, you can play the game using this [hosted version][githubrepo] on GitHub Pages.
+Alternatively, you can play the game using this [hosted version][battleship] on GitHub Pages.
 
 ### Game overview
 This version is a single player game against the computer. The objective of the game is to find and destroy all of the computer ships before yours are found and destroyed.
@@ -126,7 +126,7 @@ if (columnIndex === 0 && rowIndex !== 0 && rowIndex !== width - shipLength) {
   ```
 
 ### Player set up
-The player placement of ships is achieved through taking the ids of the ship type buttons ```  <div class="ship-button" id="carrier" data-shipsize='5'>
+The player placement of ships is achieved through taking the ids of the ship type buttons ```<div class="ship-button" id="carrier" data-shipsize='5'>
     Aircraft carrier
   </div>``` and using ```find()``` to select the ship size from the array of ship objects.
 
