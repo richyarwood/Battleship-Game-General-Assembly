@@ -291,6 +291,7 @@ function computerPlaceShips() {
       }
     }
   }
+  ships = masterShipsArray.slice()
 }
 
 // CHECKS IF THE PLAYER CAN PLACE A SHIP
@@ -298,44 +299,46 @@ function playerCanPlaceShips() {
   playerSquares.forEach((element, index) => {
     element.addEventListener('click', () => {
 
-      ships = masterShipsArray.slice()
-
       const selectedShip = ships.find(ship => {
         return ship.name === shipType
       })
 
-      shipLength = selectedShip.size
-      placeShip = true
+      if (!selectedShip) {
+        errorMessage.innerText = 'No more of that type. Place another'
 
-      if (playerChoice && playerShips) {
-        const playerShipStart = index
-        randomIndex = playerShipStart //Sets index for blockade
+      } else {
+        shipLength = selectedShip.size
+        placeShip = true
 
-        const playerColumnIndex = (index % width)
-        const playerRowIndex = Math.floor(index / width)
+        if (playerChoice && playerShips) {
+          const playerShipStart = index
+          randomIndex = playerShipStart //Sets index for blockade
 
-        if ((width - playerColumnIndex) < shipLength && orientation === 1) {
-          placeShip = false
-          errorMessage.innerText = 'Try again. Ship will go off board'
+          const playerColumnIndex = (index % width)
+          const playerRowIndex = Math.floor(index / width)
 
-        } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
-          placeShip = false
-          errorMessage.innerText = 'Try again. Ship will go off board'
+          if ((width - playerColumnIndex) < shipLength && orientation === 1) {
+            placeShip = false
+            errorMessage.innerText = 'Try again. Ship will go off board'
 
-        } else if (placeShip){
-          for (let i = 0; i < shipLength; i++) {
-            const playerNextIndex = randomIndex + i * orientation
-            if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')){
-              placeShip = false
-              errorMessage.innerText = 'You can\'t overlap ships'
+          } else if ((playerRowIndex - 1 + shipLength) >= width && orientation === 10) {
+            placeShip = false
+            errorMessage.innerText = 'Try again. Ship will go off board'
+
+          } else if (placeShip){
+            for (let i = 0; i < shipLength; i++) {
+              const playerNextIndex = randomIndex + i * orientation
+              if (playerSquares[playerNextIndex].classList.contains('ship') || playerSquares[playerNextIndex].classList.contains('block')){
+                placeShip = false
+                errorMessage.innerText = 'You can\'t overlap ships'
+              }
             }
+          } else {
+            placeShip = true
+            errorMessage.innerText = 'Place your ship'
           }
-        } else {
-          console.log('can place')
-          placeShip = true
-          errorMessage.innerText = 'Place your ship'
+          playerPlaceShips()
         }
-        playerPlaceShips()
       }
     })
   })
@@ -357,7 +360,8 @@ function playerPlaceShips() {
       playerShip.push(playerNextIndex)
     }
     playerShipsObject[playerShipSquare.dataset.playership] = playerShip
-    console.log(playerShipsObject, 'Ships')
+
+    ships.splice(shipType, 1)
 
     playerShips--
     const buttonDisabled = document.getElementById(shipType)

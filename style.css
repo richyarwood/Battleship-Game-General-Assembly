@@ -93,15 +93,16 @@ main {
   border: 1px solid #ffffff;
   border-radius: 4px;
   width: 450px;
-  background-color: rgba(141, 168, 195, 0.6);
+  background-color: rgba(141, 168, 195, 0.8);
 }
 
 .error-message {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 500;
   text-transform: uppercase;
   line-height: 40px;
-  color: #ffffff;
+  color: #ff0000;
+  text-shadow: 1px 1px 2px black;
 }
 
 /* GRID SET UP */
