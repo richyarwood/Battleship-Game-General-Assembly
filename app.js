@@ -27,9 +27,9 @@ const masterShipsArray = [{
   size: 1
 }]
 
-let lastHit = null, nextHitMoves = [-1, -width, 1, width], shipLength = 0, playerShips = 7, playerShipsLeft = 7, computerShipsLeft = 7, ships = masterShipsArray.slice(), shipType, randomIndex, clickedIndex, orientation, placeShip, playerChoice = false, playerTurn = true, block
+let shipLength = 0, playerShips = 7, playerShipsLeft = 7, computerShipsLeft = 7, ships = masterShipsArray.slice(), shipType, randomIndex, clickedIndex, orientation, placeShip, playerChoice = false, playerTurn = true, block
 
-let  shipChoiceButtons, horizontalBtn, verticalBtn, shipTypeBtn, resetBtn, startBtn, anotherGameBtn, modalWrapper, gameOverWrapper, shipsToPlace, yourShipsDestroyed, computerShipsDestroyed, errorMessage
+let shipChoiceButtons, horizontalBtn, verticalBtn, shipTypeBtn, resetBtn, startBtn, anotherGameBtn, modalWrapper, gameOverWrapper, shipsToPlace, yourShipsDestroyed, computerShipsDestroyed, errorMessage
 
 //INITIALISE AND LOAD DOM DEPENDENT VARIABLES ========================
 function initialiseGame() {
@@ -131,7 +131,6 @@ function markAsHitOrMiss(){
       playerSquares[randomIndex].classList.remove('ship')
       explosion.play()
       isShipDestroyed()
-      lastHit = randomIndex
       playerTurn = true
 
     } else { // Guess has missed
@@ -229,6 +228,7 @@ function checkIfHit() {
 //GENERATES THE COMPUTER SHIPS ==============================
 function computerPlaceShips() {
 
+  // Creates a new array to keep the original intact ========
   ships = masterShipsArray.slice()
 
   while (ships.length > 0) {
