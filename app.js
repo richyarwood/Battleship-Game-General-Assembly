@@ -75,157 +75,6 @@ function createGrid() {
   addEventListeners()
 }
 
-//GAMEOVER FUNCTION==============================
-function gameOver() {
-  modalWrapper.setAttribute('style', 'display:flex')
-  const instructionText = document.querySelector('.instructions-text')
-  instructionText.setAttribute('style', 'display: none')
-  const gameOverText = document.querySelector('.gameover-text')
-  gameOverWrapper.setAttribute('style', 'display: flex')
-  const startImage = document.getElementById('start-image')
-  startImage.setAttribute('style', 'display: none')
-  startBtn.setAttribute('style', 'display:none')
-
-  if (playerShipsLeft === 0){
-    gameOverText.innerText = 'You\'ve lost the battle!!'
-
-  } else if (computerShipsLeft === 0){
-    gameOverText.innerText = 'You are victorious and have won the battle!!!'
-  }
-}
-
-//GAME RESET FUNCTION ===================================
-function resetGame() {
-  playerTurn = true
-  placeShip = false
-  playerShips = 7
-  shipsToPlace.innerText = playerShips
-  yourShipsDestroyed.innerText = 7
-  computerShipsDestroyed.innerText = 7
-  modalWrapper.setAttribute('style', 'display:none')
-
-  shipTypeBtn.forEach(element => {
-    element.classList.remove('ship-button-selected')
-    element.classList.remove('hidden')
-  })
-  const playerSquares = document.querySelectorAll('.player-square')
-  const computerSquares = document.querySelectorAll('.square')
-  playerSquares.forEach(element => {
-    element.className = 'player-square'
-  })
-
-  computerSquares.forEach(element => {
-    element.className = 'square'
-  })
-
-  computerPlaceShips()
-}
-
-// THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
-function markAsHitOrMiss(){
-  firing.play()
-
-  setTimeout(() => {
-    if (playerSquares[randomIndex].classList.contains('ship')) {
-      playerSquares[randomIndex].classList.add('hit')
-      playerSquares[randomIndex].classList.remove('ship')
-      explosion.play()
-      isShipDestroyed()
-      lastHit = randomIndex
-      playerTurn = true
-
-    } else { // Guess has missed
-      playerSquares[randomIndex].classList.add('miss')
-      playerSquares[randomIndex].classList.remove('block')
-      splash.play()
-      playerTurn = true
-    }
-  }, 1500)
-}
-
-function isShipDestroyed() {
-
-  if (playerTurn) {
-    //Checks if player has destroyed a ship
-    const hitArray = computerShipsObject[computerSquares[clickedIndex].dataset.computership]
-    let count = 0
-
-    for (let i = 0; i < hitArray.length; i++){
-      const hitCheck = computerSquares[hitArray[i]]
-      if (hitCheck.classList.contains('hit')) {
-        count++
-      }
-      if (count === hitArray.length){
-        computerShipsLeft--
-        computerShipsDestroyed.innerText = computerShipsLeft
-      }
-    }
-    playerTurn = false
-
-  } else {
-    //Checks if computer has destroyed a ship
-    const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
-
-    let count = 0
-
-    for (let i = 0; i < hitArray.length; i++){
-      const hitCheck = playerSquares[hitArray[i]]
-      if (hitCheck.classList.contains('hit')) {
-        count++
-      }
-      if (count === hitArray.length){
-        playerShipsLeft--
-        yourShipsDestroyed.innerText = playerShipsLeft
-      }
-    }
-  }
-  if (computerShipsLeft === 0 || playerShipsLeft === 0) {
-    gameOver()
-  }
-}
-
-//FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
-function computerGuess() {
-
-  if(!playerTurn && playerShipsLeft > 0){
-    randomIndex = Math.floor(Math.random() * playerSquares.length)
-
-    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
-      randomIndex = Math.floor(Math.random() * playerSquares.length)
-    }
-    markAsHitOrMiss()
-  }
-}
-
-//FUNCTION TO CHECK PLAYER HIT OR A MISS=================
-function checkIfHit() {
-
-  if (playerShips === 0){
-    firing.play()
-  } else {
-    errorMessage.classList.add('message-in')
-    errorMessage.innerText = 'You need to place your ships first'
-  }
-
-  setTimeout(() => {
-    if (playerShips === 0 && playerTurn) {
-      if (this.classList.contains('ship')) {
-        this.classList.add('hit')
-        explosion.play()
-        this.removeEventListener('click', checkIfHit)
-        clickedIndex = computerSquares.indexOf(this)
-        isShipDestroyed()
-      } else {
-        this.classList.add('miss')
-        splash.play()
-        this.removeEventListener('click', checkIfHit)
-        playerTurn = false
-      }
-    }
-  }, 1500)
-  setTimeout(computerGuess, 3000)
-}
-
 //GENERATES THE COMPUTER SHIPS ==============================
 function computerPlaceShips() {
 
@@ -361,7 +210,9 @@ function playerPlaceShips() {
     }
     playerShipsObject[playerShipSquare.dataset.playership] = playerShip
 
-    ships.splice(shipType, 1)
+    let shipToBeRemoved = ships.findIndex(ship => ship.name === shipType)
+
+    ships.splice(shipToBeRemoved, 1)
 
     playerShips--
     const buttonDisabled = document.getElementById(shipType)
@@ -532,6 +383,157 @@ function blockAroundHorizontalShip() {
       block[endOfBlockade + i].classList.add('block') // bottom
     }
   }
+}
+
+//GAMEOVER FUNCTION==============================
+function gameOver() {
+  modalWrapper.setAttribute('style', 'display:flex')
+  const instructionText = document.querySelector('.instructions-text')
+  instructionText.setAttribute('style', 'display: none')
+  const gameOverText = document.querySelector('.gameover-text')
+  gameOverWrapper.setAttribute('style', 'display: flex')
+  const startImage = document.getElementById('start-image')
+  startImage.setAttribute('style', 'display: none')
+  startBtn.setAttribute('style', 'display:none')
+
+  if (playerShipsLeft === 0){
+    gameOverText.innerText = 'You\'ve lost the battle!!'
+
+  } else if (computerShipsLeft === 0){
+    gameOverText.innerText = 'You are victorious and have won the battle!!!'
+  }
+}
+
+//GAME RESET FUNCTION ===================================
+function resetGame() {
+  playerTurn = true
+  placeShip = false
+  playerShips = 7
+  shipsToPlace.innerText = playerShips
+  yourShipsDestroyed.innerText = 7
+  computerShipsDestroyed.innerText = 7
+  modalWrapper.setAttribute('style', 'display:none')
+
+  shipTypeBtn.forEach(element => {
+    element.classList.remove('ship-button-selected')
+    element.classList.remove('hidden')
+  })
+  const playerSquares = document.querySelectorAll('.player-square')
+  const computerSquares = document.querySelectorAll('.square')
+  playerSquares.forEach(element => {
+    element.className = 'player-square'
+  })
+
+  computerSquares.forEach(element => {
+    element.className = 'square'
+  })
+
+  computerPlaceShips()
+}
+
+// THIS CHECKS WHETHER THE COMPUTER'S GUESS IS A HIT OR A MISS ==========
+function markAsHitOrMiss(){
+  firing.play()
+
+  setTimeout(() => {
+    if (playerSquares[randomIndex].classList.contains('ship')) {
+      playerSquares[randomIndex].classList.add('hit')
+      playerSquares[randomIndex].classList.remove('ship')
+      explosion.play()
+      isShipDestroyed()
+      lastHit = randomIndex
+      playerTurn = true
+
+    } else { // Guess has missed
+      playerSquares[randomIndex].classList.add('miss')
+      playerSquares[randomIndex].classList.remove('block')
+      splash.play()
+      playerTurn = true
+    }
+  }, 1500)
+}
+
+function isShipDestroyed() {
+
+  if (playerTurn) {
+    //Checks if player has destroyed a ship
+    const hitArray = computerShipsObject[computerSquares[clickedIndex].dataset.computership]
+    let count = 0
+
+    for (let i = 0; i < hitArray.length; i++){
+      const hitCheck = computerSquares[hitArray[i]]
+      if (hitCheck.classList.contains('hit')) {
+        count++
+      }
+      if (count === hitArray.length){
+        computerShipsLeft--
+        computerShipsDestroyed.innerText = computerShipsLeft
+      }
+    }
+    playerTurn = false
+
+  } else {
+    //Checks if computer has destroyed a ship
+    const hitArray = playerShipsObject[playerSquares[randomIndex].dataset.playership]
+
+    let count = 0
+
+    for (let i = 0; i < hitArray.length; i++){
+      const hitCheck = playerSquares[hitArray[i]]
+      if (hitCheck.classList.contains('hit')) {
+        count++
+      }
+      if (count === hitArray.length){
+        playerShipsLeft--
+        yourShipsDestroyed.innerText = playerShipsLeft
+      }
+    }
+  }
+  if (computerShipsLeft === 0 || playerShipsLeft === 0) {
+    gameOver()
+  }
+}
+
+//FUNCTION FOR THE COMPUTER TO GUESS A RANDOM SQUARE==============
+function computerGuess() {
+
+  if(!playerTurn && playerShipsLeft > 0){
+    randomIndex = Math.floor(Math.random() * playerSquares.length)
+
+    while (playerSquares[randomIndex].classList.contains('hit') || playerSquares[randomIndex].classList.contains('miss')) {
+      randomIndex = Math.floor(Math.random() * playerSquares.length)
+    }
+    markAsHitOrMiss()
+  }
+}
+
+//FUNCTION TO CHECK PLAYER HIT OR A MISS=================
+function checkIfHit() {
+
+  if (playerShips === 0){
+    firing.play()
+  } else {
+    errorMessage.classList.add('message-in')
+    errorMessage.innerText = 'You need to place your ships first'
+  }
+
+  setTimeout(() => {
+    if (playerShips === 0 && playerTurn) {
+      if (this.classList.contains('ship')) {
+        this.classList.add('hit')
+        explosion.play()
+        this.removeEventListener('click', checkIfHit)
+        clickedIndex = computerSquares.indexOf(this)
+        isShipDestroyed()
+      } else {
+        this.classList.add('miss')
+        splash.play()
+        this.removeEventListener('click', checkIfHit)
+        playerTurn = false
+      }
+    }
+  }, 1500)
+  setTimeout(computerGuess, 3000)
 }
 
 // ADDING IN ALL EVENT LISTENERS============================
