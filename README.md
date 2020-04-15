@@ -1,6 +1,6 @@
 # GA-SEI-project-01
 
-[battleship]: https://richyarwood.github.io/GA-SEI-project-01/
+[battleship]: https://richyarwood.github.io/Battleship-Game-General-Assembly/
 [githubrepo]: https://github.com/richyarwood/GA-SEI-project-01
 
 ## Timeframe
